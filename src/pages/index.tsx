@@ -3,27 +3,58 @@ import { useState } from "react";
 const pages = [
   {
     title: "Welcome to River",
-    content: "On RIVER, everything is a ~wave.",
+    content: () => (
+      <p className="text-2xl mb-12 text-black text-opacity-60">
+        On RIVER, everything is a{" "}
+        <span className="font-extrabold italic">~wave</span>.
+      </p>
+    ),
   },
   {
     title: "When you ~wave",
-    content:
-      "To a friend, to a group, to search, to shop...the data you create is 100% in your control.",
+    content: () => (
+      <p className="text-2xl mb-12 text-black text-opacity-60">
+        To a friend, to a group, to search, to shop...the{" "}
+        <span className="font-bold italic">data</span> you create is 100% in
+        your control.
+      </p>
+    ),
   },
   {
     title: "Keep your data private",
-    content:
-      "You control\nwho sees it\nwho has access to it\nwhere they see it\nand for how long",
+    content: () => (
+      <div className="text-2xl mb-12  text-black text-opacity-60">
+        <p className="font-extrabold italic">You control</p>
+        <br />
+        <ul className="list-disc list-inside">
+          <li>who sees it</li>
+          <li>who has access to it</li>
+          <li>where they see it</li>
+          <li>and for how long</li>
+        </ul>
+      </div>
+    ),
   },
   {
     title: "Sell your data",
-    content:
-      "If you want Sell it real-time to businesses and companies eager to buy it.",
+    content: () => (
+      <div className="text-2xl mb-12 text-black text-opacity-60">
+        <p>
+          If you want, <br />
+          <span className="font-extrabold italic">Sell it real-time</span> to
+          businesses and companies eager to buy it.
+        </p>
+        {/* <img src="/path/to/your/image.jpg" alt="Data selling illustration" className="mt-4 mx-auto" /> */}
+      </div>
+    ),
   },
   {
     title: "When you wave, you will always see this",
-    content:
-      "Click on this at any time to see what's happening with your data.",
+    content: () => (
+      <p className="text-xl font-semibold mb-12 text-black text-opacity-60">
+        Click on this at any time to see what&apos;s happening with your data.
+      </p>
+    ),
   },
 ];
 
@@ -37,12 +68,14 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center">
       <main className="flex flex-1 flex-col justify-between w-full">
-        <h1 className="text-3xl text-black font-bold mb-6">
-          {pages[currentPage].title}
-        </h1>
-        <p className="text-lg mb-12 text-black text-opacity-60 whitespace-pre-line">
-          {pages[currentPage].content}
-        </p>
+        <div>
+          <h1 className="text-3xl text-black font-bold my-12">
+            {pages[currentPage].title}
+          </h1>
+          <p className="text-lg mb-12 text-black text-opacity-60 whitespace-pre-line">
+            {pages[currentPage].content()}
+          </p>
+        </div>
         <button
           className="bg-main-action text-white font-semibold py-3 px-6 rounded-md w-full flex items-center justify-center"
           onClick={handleNext}
