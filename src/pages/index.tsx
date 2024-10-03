@@ -51,9 +51,12 @@ const pages = [
   {
     title: "When you wave, you will always see this",
     content: () => (
-      <p className="text-xl font-semibold mb-12 text-black text-opacity-60">
-        Click on this at any time to see what&apos;s happening with your data.
-      </p>
+      <>
+        <img src="/tilde.png" alt="Tilde" className="w-20 h-20 mx-auto my-4" />
+        <p className="text-2xl font-medium mb-12 text-black text-opacity-60">
+          Click on this at any time to see what&apos;s happening with your data.
+        </p>
+      </>
     ),
   },
 ];
