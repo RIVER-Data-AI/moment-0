@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import TildeInfo from "@/components/TildeInfo";
 
 const pages = [
   {
@@ -58,6 +59,10 @@ const pages = [
         </p>
       </>
     ),
+  },
+  {
+    title: "When you wave, you will always see this",
+    content: () => <TildeInfo />,
   },
 ];
 
