@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const pages = [
   {
@@ -44,7 +45,6 @@ const pages = [
           <span className="font-extrabold italic">Sell it real-time</span> to
           businesses and companies eager to buy it.
         </p>
-        {/* <img src="/path/to/your/image.jpg" alt="Data selling illustration" className="mt-4 mx-auto" /> */}
       </div>
     ),
   },
@@ -69,21 +69,32 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center">
-      <main className="flex flex-1 flex-col justify-between w-full">
-        <div>
-          <h1 className="text-3xl text-black font-bold my-12">
-            {pages[currentPage].title}
-          </h1>
-          <p className="text-lg mb-12 text-black text-opacity-60 whitespace-pre-line">
-            {pages[currentPage].content()}
-          </p>
-        </div>
+    <div className="flex flex-col items-center justify-between min-h-screen p-6 text-center">
+      <main className="flex-1 w-full overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentPage}
+            initial={{ opacity: 0.5, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0.5, x: -50 }}
+            transition={{ duration: 0.3 }}
+            className="h-full flex flex-col justify-center"
+          >
+            <h1 className="text-3xl text-black font-bold mb-12">
+              {pages[currentPage].title}
+            </h1>
+            <div className="text-lg mb-12 text-black text-opacity-60 whitespace-pre-line">
+              {pages[currentPage].content()}
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </main>
+      <div className="w-full mt-6">
         <button
           className="bg-main-action text-white font-semibold py-3 px-6 rounded-md w-full flex items-center justify-center"
           onClick={handleNext}
         >
-          {currentPage === pages.length - 1 ? "Finish" : "Next"}
+          <span>Next</span>
           <svg
             className="w-4 h-4 ml-2"
             fill="none"
@@ -99,7 +110,7 @@ export default function Home() {
             />
           </svg>
         </button>
-      </main>
+      </div>
     </div>
   );
 }
