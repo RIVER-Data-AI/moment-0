@@ -2,6 +2,7 @@ import React from "react";
 import { MdLayers } from "react-icons/md";
 import { PiCurrencyDollarSimpleFill as CoinIcon } from "react-icons/pi";
 import { FaBriefcase } from "react-icons/fa";
+import { PiCoinsBold } from "react-icons/pi";
 
 const TildeInfo = () => {
   return (
@@ -33,42 +34,50 @@ const TildeInfo = () => {
           <span className="ml-1">0</span>
         </div>
       </div>
-      <div className="border rounded-lg p-4">
-        <div className="text-center text-2xl mb-4">~</div>
-        <div className="flex items-start mb-4">
-          <span className="mr-2 text-xl">◆</span>
-          <div>
-            <h3 className="font-semibold">Data</h3>
-            <p className="text-sm text-gray-600">
+      <div className="border-2 border-[#CBD2E0]">
+        <div className="text-center text-2xl mb-4 border-b-2 border-[#CBD2E0]">
+          ~
+        </div>
+        <div className="flex items-center justify-start mb-4 pb-4 border-[#CBD2E0] border-b-2">
+          <div className="flex p-2">
+            <MdLayers size={25} />
+          </div>
+          <div className="flex flex-col">
+            <h3 className="flex font-semibold">Data</h3>
+            <div className="flex text-sm text-gray-600 text-start">
               Tracks your data and keeps it under your control.
-            </p>
+            </div>
           </div>
         </div>
-        <div className="flex items-start mb-4">
-          <span className="mr-2 text-xl">$</span>
-          <div>
-            <h3 className="font-semibold">Potential value</h3>
-            <p className="text-sm text-gray-600">
+        <div className="flex items-center justify-start mb-4 pb-4 border-[#CBD2E0] border-b-2">
+          <div className="flex p-2">
+            <CoinIcon size={25} />
+          </div>
+          <div className="flex flex-col">
+            <h3 className="flex font-semibold">Potential Value</h3>
+            <div className="flex text-sm text-gray-600 text-start">
               Collected data&apos;s potential value.
-            </p>
+            </div>
           </div>
         </div>
-        <div className="flex items-start mb-4">
-          <span className="mr-2 text-xl">💰</span>
-          <div>
-            <h3 className="font-semibold">Earnings</h3>
-            <p className="text-sm text-gray-600">
+        <div className="flex items-center justify-start mb-4 pb-4 border-[#CBD2E0] border-b-2">
+          <span className="flex p-2">
+            <PiCoinsBold size={25} />
+          </span>
+          <div className="flex flex-col">
+            <h3 className="font-semibold text-start">Earnings</h3>
+            <p className="text-sm text-gray-600 text-start">
               All the money that is yours.
             </p>
           </div>
         </div>
-        <div className="flex items-start">
-          <span className="mr-2 text-xl">
-            <FaBriefcase />
+        <div className="flex items-center justify-start mb-4">
+          <span className="flex p-2">
+            <FaBriefcase size={25} />
           </span>
           <div>
-            <h3 className="font-semibold">Enterprises</h3>
-            <p className="text-sm text-gray-600">
+            <h3 className="font-semibold text-start">Enterprises</h3>
+            <p className="text-sm text-gray-600 text-start">
               Businesses joining your waves.
             </p>
           </div>

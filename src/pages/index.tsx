@@ -94,7 +94,7 @@ export default function Home() {
           </motion.div>
         </AnimatePresence>
       </main>
-      <div className="w-full mt-6">
+      <div className="w-full fixed bottom-0 left-0 p-6 ">
         <button
           className="bg-main-action text-white font-semibold py-3 px-6 rounded-md w-full flex items-center justify-center"
           onClick={handleNext}
