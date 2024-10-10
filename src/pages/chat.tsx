@@ -1,5 +1,6 @@
 import React from "react";
 import TildeHeader from "@/components/TildeHeader";
+import ChatBubble from "@/components/ChatBubble";
 
 const chat = () => {
   return (
@@ -24,22 +25,11 @@ const chat = () => {
         </div>
       </div>
       <div className="p-3">
-        <div className="max-w-md mx-auto mt-8 p-4 rounded-lg bg-chat-secondary-bg">
-          <div className="flex items-center">
-            <div className="w-7 h-7 rounded-md bg-white flex items-center justify-center mr-2">
-              <img src="/logo.png" alt="Logo" className="w-5 h-5" />
-            </div>
-            <h2 className="text-lg font-semibold text-black">
-              River Intelligence
-            </h2>
-          </div>
-          <div className="">
-            <p className="text-gray-700">
-              I’ll help you to invite your friends later, but first, what’s your
-              name?
-            </p>
-          </div>
-        </div>
+        <ChatBubble
+          message="I'll help you to invite your friends later, but first, what's your name?"
+          sender="river"
+        />
+        <ChatBubble message="Graeme" sender="user" />
       </div>
       <div className="w-full fixed bottom-0 left-0 p-3 flex items-center gap-2">
         <span className="text-3xl text-primary-border font-bold">~</span>

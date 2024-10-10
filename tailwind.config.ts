@@ -11,6 +11,7 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        "river-black": "#2D3648",
         "primary-border": "#CBD2E0",
         "main-action": "#2D3748",
         "chat-primary-bg": "#2C3B4F",
