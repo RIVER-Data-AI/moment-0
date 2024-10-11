@@ -9,8 +9,8 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ message, sender }) => {
   const isUser = sender === "user";
   return (
     <div
-      className={`max-w-md mx-auto mt-2 p-4 rounded-lg ${
-        isUser ? "bg-chat-primary-bg" : "bg-chat-secondary-bg"
+      className={`flex w-fit mt-2 px-4 py-2 rounded-lg ${
+        isUser ? "bg-chat-primary-bg self-end" : "bg-chat-secondary-bg"
       }`}
     >
       <div className="flex items-center">
