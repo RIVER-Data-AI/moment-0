@@ -9,7 +9,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ message, sender }) => {
   const isUser = sender === "user";
   return (
     <div
-      className={`flex w-fit mt-2 px-4 py-2 rounded-lg ${
+      className={`flex flex-col w-fit mt-2 px-4 py-2 rounded-lg ${
         isUser ? "bg-chat-primary-bg self-end" : "bg-chat-secondary-bg"
       }`}
     >
@@ -20,7 +20,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ message, sender }) => {
           </div>
         )}
         <h2
-          className={`text-lg font-semibold ${
+          className={`text-md font-semibold ${
             isUser ? "text-right text-white" : "text-black"
           }`}
         >

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TildeHeader from "@/components/TildeHeader";
 import ChatBubble from "@/components/ChatBubble";
 import useChatStore from "@/stores/useChatStore";
@@ -6,6 +6,10 @@ import useChatStore from "@/stores/useChatStore";
 const Chat = () => {
   const [inputValue, setInputValue] = useState("");
   const { messages, addMessage } = useChatStore();
+  useEffect(() => {
+    // load first system message
+    addMessage("Welcome to RIVER. Wave to someone.", "river");
+  }, []);
   const handleSendMessage = async () => {
     if (inputValue.trim() === "") return;
 
