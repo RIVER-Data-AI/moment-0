@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import TildeHeader from "@/components/TildeHeader";
 import ChatBubble from "@/components/ChatBubble";
+// import DatePicker from "@/components/DatePicker";
 import useChatStore from "@/stores/useChatStore";
 
 function useBottomRef() {
@@ -67,15 +68,11 @@ const Chat = () => {
 
       // Decode the stream and update the AI response
       const chunk = decoder.decode(value, { stream: true });
-      aiResponse += chunk;
-
-      // Check for "END STREAM" message and break the loop if found
-      if (aiResponse.includes("END STREAM")) {
-        aiResponse = aiResponse.replace("END STREAM", "");
-        break;
+      if (!chunk.includes("END STREAM")) {
+        aiResponse += chunk;
+        updateLatestMessage(aiResponse);
+        scrollToBottom();
       }
-      updateLatestMessage(aiResponse);
-      scrollToBottom();
     }
   };
 
@@ -116,7 +113,7 @@ const Chat = () => {
         ))}
         <div ref={bottomRef} />
       </div>
-
+      {/* <DatePicker onSelectDate={(date) => console.log(date)} /> */}
       <div className="w-full bg-white p-3 flex items-center gap-2">
         <span className="text-3xl text-primary-border font-bold">~</span>
         <input
