@@ -1,15 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import TildeHeader from "@/components/TildeHeader";
 import ChatBubble from "@/components/ChatBubble";
 import useChatStore from "@/stores/useChatStore";
 
+function useBottomRef() {
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  return {
+    bottomRef,
+    scrollToBottom,
+  };
+}
+
 const Chat = () => {
   const [inputValue, setInputValue] = useState("");
   const { messages, addMessage, updateLatestMessage } = useChatStore();
+  const { bottomRef, scrollToBottom } = useBottomRef();
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     // load first system message
     addMessage("Welcome to RIVER. Wave to someone.", "river");
   }, []);
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      scrollToBottom();
+    }
+  }, [messages]);
+
   const handleSendMessage = async () => {
     if (inputValue.trim() === "") return;
 
@@ -50,11 +75,12 @@ const Chat = () => {
         break;
       }
       updateLatestMessage(aiResponse);
+      scrollToBottom();
     }
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-screen">
       <div className="flex justify-around pt-4 px-2 gap-2 items-center border-b-2 pb-4 border-primary-border">
         <img src="/logo.png" alt="Logo" className="w-5 h-5 mr-2" />
         <TildeHeader />
@@ -74,12 +100,24 @@ const Chat = () => {
           permission. It&apos;s your data!
         </div>
       </div>
-      <div className="p-3 pb-16 flex flex-col">
+      <div
+        ref={chatContainerRef}
+        className="flex-grow overflow-y-auto p-3 pb-16"
+      >
         {messages.map((msg, index) => (
-          <ChatBubble key={index} message={msg.message} sender={msg.sender} />
+          <div
+            key={index}
+            className={`flex ${
+              msg.sender === "user" ? "justify-end" : "justify-start"
+            }`}
+          >
+            <ChatBubble message={msg.message} sender={msg.sender} />
+          </div>
         ))}
+        <div ref={bottomRef} />
       </div>
-      <div className="w-full bg-white fixed bottom-0 left-0 p-3 flex items-center gap-2">
+
+      <div className="w-full bg-white p-3 flex items-center gap-2">
         <span className="text-3xl text-primary-border font-bold">~</span>
         <input
           type="text"
