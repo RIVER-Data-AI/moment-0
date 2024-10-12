@@ -2,9 +2,39 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import OpenAI from "openai";
 
+interface ConversationItem {
+  sender: "user" | "river";
+  message: string;
+}
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
+const prepareConversationHistory = (
+  conversation_history: ConversationItem[]
+) => {
+  const conversationHistoryMessages: {
+    role: "user" | "system" | "assistant";
+    content: string;
+  }[] = [];
+  conversation_history.forEach((conversation_item) => {
+    conversationHistoryMessages.push(
+      {
+        role: "user",
+        content:
+          conversation_item.sender === "user" ? conversation_item.message : "",
+      },
+      {
+        role: "assistant",
+        content:
+          conversation_item.sender === "river" ? conversation_item.message : "",
+      }
+    );
+  });
+
+  return conversationHistoryMessages;
+};
 
 const SYSTEM_PROMPT = `
 The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly. The assistant is helping onboard a new user to River, every conversation is called a ~wave. So that's the theme of the convo. It follows the order of the interview:
@@ -18,7 +48,10 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    const { message } = req.body as { message: string };
+    const { conversation } = req.body as { conversation: ConversationItem[] };
+    console.log("conversation in", conversation);
+    const conversation_history = prepareConversationHistory(conversation);
+    console.log("conversation_history", conversation_history);
     try {
       const stream = openai.beta.chat.completions.stream({
         model: "gpt-4-turbo",
@@ -27,10 +60,7 @@ export default async function handler(
             role: "system",
             content: SYSTEM_PROMPT,
           },
-          {
-            role: "user",
-            content: message,
-          },
+          ...conversation_history,
         ],
         stream: true,
         max_tokens: 100,

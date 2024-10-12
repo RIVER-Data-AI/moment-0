@@ -19,13 +19,13 @@ const Chat = () => {
     // Add initial AI message to Zustand store and get its index
     addMessage("", "river");
 
-    // Send message to the API
+    // Send the whole conversation to the API
     const response = await fetch("/api/chat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ message: inputValue, sender: "user" }),
+      body: JSON.stringify({ conversation: messages, sender: "user" }),
     });
 
     const reader = response?.body?.getReader();
