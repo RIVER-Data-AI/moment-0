@@ -15,7 +15,8 @@ const Chat = () => {
 
     // Add user message to Zustand store
     addMessage(inputValue, "user");
-
+    // Clear the input field
+    setInputValue("");
     // Add initial AI message to Zustand store and get its index
     addMessage("", "river");
 
@@ -25,7 +26,10 @@ const Chat = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ conversation: messages, sender: "user" }),
+      body: JSON.stringify({
+        conversation_history: messages,
+        new_message: inputValue,
+      }),
     });
 
     const reader = response?.body?.getReader();
@@ -47,9 +51,6 @@ const Chat = () => {
       }
       updateLatestMessage(aiResponse);
     }
-
-    // Clear the input field
-    setInputValue("");
   };
 
   return (

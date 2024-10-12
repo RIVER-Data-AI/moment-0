@@ -48,7 +48,10 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    const { conversation } = req.body as { conversation: ConversationItem[] };
+    const { conversation_history: conversation, new_message } = req.body as {
+      conversation_history: ConversationItem[];
+      new_message: string;
+    };
     console.log("conversation in", conversation);
     const conversation_history = prepareConversationHistory(conversation);
     console.log("conversation_history", conversation_history);
@@ -61,9 +64,13 @@ export default async function handler(
             content: SYSTEM_PROMPT,
           },
           ...conversation_history,
+          {
+            role: "user",
+            content: new_message,
+          },
         ],
         stream: true,
-        max_tokens: 100,
+        max_tokens: 1000,
       });
 
       stream.on("content", (delta) => {
