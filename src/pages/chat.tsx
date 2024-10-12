@@ -68,6 +68,7 @@ const Chat = () => {
 
       // Decode the stream and update the AI response
       const chunk = decoder.decode(value, { stream: true });
+      console.log("chunk", chunk);
       if (!chunk.includes("END STREAM")) {
         aiResponse += chunk;
         updateLatestMessage(aiResponse);
