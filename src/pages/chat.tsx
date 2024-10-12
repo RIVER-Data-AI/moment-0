@@ -5,7 +5,7 @@ import useChatStore from "@/stores/useChatStore";
 
 const Chat = () => {
   const [inputValue, setInputValue] = useState("");
-  const { messages, addMessage } = useChatStore();
+  const { messages, addMessage, updateLatestMessage } = useChatStore();
   useEffect(() => {
     // load first system message
     addMessage("Welcome to RIVER. Wave to someone.", "river");
@@ -13,11 +13,14 @@ const Chat = () => {
   const handleSendMessage = async () => {
     if (inputValue.trim() === "") return;
 
-    // Add message to Zustand store
+    // Add user message to Zustand store
     addMessage(inputValue, "user");
 
+    // Add initial AI message to Zustand store and get its index
+    addMessage("", "river");
+
     // Send message to the API
-    await fetch("/api/chat", {
+    const response = await fetch("/api/chat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -25,6 +28,27 @@ const Chat = () => {
       body: JSON.stringify({ message: inputValue, sender: "user" }),
     });
 
+    const reader = response?.body?.getReader();
+    const decoder = new TextDecoder();
+    let aiResponse = "";
+
+    while (true) {
+      const { done, value } = await reader!.read();
+      if (done) break;
+
+      // Decode the stream and update the AI response
+      const chunk = decoder.decode(value, { stream: true });
+      aiResponse += chunk;
+
+      // Check for "END STREAM" message and break the loop if found
+      if (aiResponse.includes("END STREAM")) {
+        aiResponse = aiResponse.replace("END STREAM", "");
+        break;
+      }
+      updateLatestMessage(aiResponse);
+    }
+
+    // Clear the input field
     setInputValue("");
   };
 

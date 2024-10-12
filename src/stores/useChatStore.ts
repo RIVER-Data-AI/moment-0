@@ -8,6 +8,7 @@ interface Message {
 interface ChatState {
   messages: Message[];
   addMessage: (message: string, sender: "river" | "user") => void;
+  updateLatestMessage: (message: string) => void;
 }
 
 const useChatStore = create<ChatState>((set) => ({
@@ -19,6 +20,16 @@ const useChatStore = create<ChatState>((set) => ({
         { message, sender: sender as "river" | "user" },
       ],
     })),
+  updateLatestMessage: (message: string) =>
+    set((state: ChatState) => {
+      if (state.messages.length === 0) return state;
+      const updatedMessages = [...state.messages];
+      updatedMessages[updatedMessages.length - 1] = {
+        ...updatedMessages[updatedMessages.length - 1],
+        message,
+      };
+      return { messages: updatedMessages };
+    }),
 }));
 
 export default useChatStore;
