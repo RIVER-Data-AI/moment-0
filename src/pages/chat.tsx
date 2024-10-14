@@ -37,6 +37,7 @@ const Chat = () => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [customAction, setCustomAction] = useState<CustomAction | null>(null);
   const [showWelcome, setShowWelcome] = useState(true);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   useEffect(() => {
     if (messages.length > 0 && showWelcome) {
@@ -53,6 +54,18 @@ const Chat = () => {
       scrollToBottom();
     }
   }, [messages, customAction]);
+
+  const handleShare = () => {
+    setShowShareOverlay(false);
+    setShowSuccessMessage(true);
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+      addMessage("Join RIVER to make your data work for you", "river");
+      setCustomAction({
+        type: "join",
+      });
+    }, 3000); // Hide the success message after 3 seconds
+  };
 
   const handleSendMessage = useCallback(
     async (message: string = inputValue) => {
@@ -178,38 +191,59 @@ const Chat = () => {
 
   return (
     <div className="flex flex-col">
-      {showShareOverlay && (
-        <div className="fixed inset-0 bg-white text-river-black z-50 flex items-center justify-center p-5 flex-col">
-          <div className="p-6 w-full h-full flex flex-col justify-between bg-[#EDF0F7] rounded-lg">
-            <div className="text-start flex-grow flex flex-col justify-center p-2">
-              <div className="flex text-2xl mb-4 justify-center">
-                <img src="/logo.png" alt="Logo" className="w-10 h-10" />
-              </div>
-              <p className="text-2xl mb-2">
-                I&apos;ve just created a ~wave on the new RIVER app
-              </p>
-              <p className="text-2xl font-semibold mb-4">
-                and earned $2 from a tiny amount of my data.
-              </p>
-              <p className="text-2xl mb-2">
-                Imagine how much we can{" "}
-                <span className="font-semibold">earn together</span> by just
-                chatting like we normally do.
-              </p>
-              <p className="text-2xl">
-                On RIVER our data is{" "}
-                <span className="font-semibold">100% in our control.</span>
-              </p>
-            </div>
-          </div>
-          <button
-            className="w-full bg-gray-800 text-white py-3 rounded-lg mt-4 font-semibold"
-            onClick={() => setShowShareOverlay(false)}
+      <AnimatePresence>
+        {showSuccessMessage && (
+          <motion.div
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -50, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed top-0 left-0 right-0 bg-green-500 text-white p-2 text-center z-50"
           >
-            Share
-          </button>
-        </div>
-      )}
+            Shared successfully.
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showShareOverlay && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 bg-white text-river-black z-40 flex items-center justify-center p-5 flex-col"
+          >
+            <div className="p-6 w-full h-full flex flex-col justify-between bg-[#EDF0F7] rounded-lg">
+              <div className="text-start flex-grow flex flex-col justify-center p-2">
+                <div className="flex text-2xl mb-4 justify-center">
+                  <img src="/logo.png" alt="Logo" className="w-10 h-10" />
+                </div>
+                <p className="text-2xl mb-2">
+                  I&apos;ve just created a ~wave on the new RIVER app
+                </p>
+                <p className="text-2xl font-semibold mb-4">
+                  and earned $2 from a tiny amount of my data.
+                </p>
+                <p className="text-2xl mb-2">
+                  Imagine how much we can{" "}
+                  <span className="font-semibold">earn together</span> by just
+                  chatting like we normally do.
+                </p>
+                <p className="text-2xl">
+                  On RIVER our data is{" "}
+                  <span className="font-semibold">100% in our control.</span>
+                </p>
+              </div>
+            </div>
+            <button
+              className="w-full bg-gray-800 text-white py-3 rounded-lg mt-4 font-semibold"
+              onClick={handleShare}
+            >
+              Share
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className="sticky top-0 left-0 right-0 bg-white z-10 flex justify-around pt-4 px-2 gap-2 items-center border-b-2 pb-4 border-primary-border">
         <img src="/logo.png" alt="Logo" className="w-5 h-5 mr-2" />
         <TildeHeader />

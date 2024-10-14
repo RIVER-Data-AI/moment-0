@@ -9,6 +9,7 @@ import {
   FaFacebookF,
   FaDownload,
   FaEllipsisH,
+  FaArrowRight,
 } from "react-icons/fa";
 
 const CustomActionButtons: React.FC<{
@@ -29,6 +30,18 @@ const CustomActionButtons: React.FC<{
               {option.charAt(0).toUpperCase() + option.slice(1)}
             </button>
           ))}
+        </div>
+      );
+    case "join":
+      return (
+        <div className="flex justify-center items-center py-20">
+          <button
+            className="bg-river-black text-white font-semibold flex items-center gap-2 px-10 py-2 rounded-lg border-2 border-river-black hover:bg-gray-100 transition-colors"
+            onClick={() => onSelect("join")}
+          >
+            Jump in - join RIVER
+            <FaArrowRight size={20} />
+          </button>
         </div>
       );
     case "location":
