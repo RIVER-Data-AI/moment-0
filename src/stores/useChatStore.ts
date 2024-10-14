@@ -17,6 +17,8 @@ interface ChatState {
   ) => number;
   updateLatestMessage: (message: string, index: number) => void;
   removeMessage: (index: number) => void;
+  showShareOverlay: boolean;
+  setShowShareOverlay: (show: boolean) => void;
 }
 
 const useChatStore = create<ChatState>((set) => ({
@@ -47,6 +49,8 @@ const useChatStore = create<ChatState>((set) => ({
       newMessages.splice(index, 1);
       return { messages: newMessages };
     }),
+  showShareOverlay: false,
+  setShowShareOverlay: (show: boolean) => set({ showShareOverlay: show }),
 }));
 
 export default useChatStore;

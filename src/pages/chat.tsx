@@ -25,8 +25,14 @@ function useBottomRef() {
 
 const Chat = () => {
   const [inputValue, setInputValue] = useState("");
-  const { messages, addMessage, updateLatestMessage, removeMessage } =
-    useChatStore();
+  const {
+    messages,
+    addMessage,
+    updateLatestMessage,
+    removeMessage,
+    showShareOverlay,
+    setShowShareOverlay,
+  } = useChatStore();
   const { bottomRef, scrollToBottom } = useBottomRef();
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [customAction, setCustomAction] = useState<CustomAction | null>(null);
@@ -172,6 +178,36 @@ const Chat = () => {
 
   return (
     <div className="flex flex-col">
+      {showShareOverlay && (
+        <div className="fixed inset-0 bg-white text-river-black z-50 flex items-center justify-center">
+          <div className="p-6 w-full h-full flex flex-col justify-between">
+            <div className="text-center flex-grow flex flex-col justify-center">
+              <div className="text-2xl mb-4">
+                <span className="font-bold">r</span>
+              </div>
+              <p className="text-lg font-semibold mb-2">
+                I&apos;ve just created a ~wave on the new RIVER app
+              </p>
+              <p className="text-lg font-semibold mb-4">
+                and earned $2 from a tiny amount of my data.
+              </p>
+              <p className="mb-2">
+                Imagine how much we can earn together by just chatting like we
+                normally do.
+              </p>
+              <p className="font-semibold">
+                On RIVER our data is 100% in our control.
+              </p>
+            </div>
+            <button
+              className="w-full bg-gray-800 text-white py-3 rounded-lg mt-4 font-semibold"
+              onClick={() => setShowShareOverlay(false)}
+            >
+              Share
+            </button>
+          </div>
+        </div>
+      )}
       <div className="sticky top-0 left-0 right-0 bg-white z-10 flex justify-around pt-4 px-2 gap-2 items-center border-b-2 pb-4 border-primary-border">
         <img src="/logo.png" alt="Logo" className="w-5 h-5 mr-2" />
         <TildeHeader />

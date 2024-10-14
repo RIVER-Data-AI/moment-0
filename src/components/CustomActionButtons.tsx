@@ -1,4 +1,5 @@
 import type { CustomAction } from "@/libs/types";
+import useChatStore from "@/stores/useChatStore";
 import {
   FaLink,
   FaCommentAlt,
@@ -14,6 +15,7 @@ const CustomActionButtons: React.FC<{
   action: CustomAction;
   onSelect: (option: string) => void;
 }> = ({ action, onSelect }) => {
+  const { setShowShareOverlay } = useChatStore();
   switch (action.type) {
     case "wave":
       return (
@@ -43,18 +45,20 @@ const CustomActionButtons: React.FC<{
         { icon: <FaEllipsisH />, label: "More" },
       ];
       return (
-        <div className="grid grid-cols-3 gap-4 my-4">
-          {shareOptions.map((option, index) => (
-            <button
-              key={index}
-              className="flex flex-col text-river-black items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-              onClick={() => onSelect(option.label)}
-            >
-              <div className="text-2xl mb-2">{option.icon}</div>
-              <span className="text-sm">{option.label}</span>
-            </button>
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-3 gap-4 my-4">
+            {shareOptions.map((option, index) => (
+              <button
+                key={index}
+                className="flex flex-col text-river-black items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                onClick={() => setShowShareOverlay(true)}
+              >
+                <div className="text-2xl mb-2">{option.icon}</div>
+                <span className="text-sm">{option.label}</span>
+              </button>
+            ))}
+          </div>
+        </>
       );
 
     default:
