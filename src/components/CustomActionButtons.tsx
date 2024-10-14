@@ -1,4 +1,14 @@
 import type { CustomAction } from "@/libs/types";
+import {
+  FaLink,
+  FaCommentAlt,
+  FaTwitter,
+  FaInstagram,
+  FaWhatsapp,
+  FaFacebookF,
+  FaDownload,
+  FaEllipsisH,
+} from "react-icons/fa";
 
 const CustomActionButtons: React.FC<{
   action: CustomAction;
@@ -21,16 +31,32 @@ const CustomActionButtons: React.FC<{
       );
     case "location":
     case "share":
+      const shareOptions = [
+        { icon: <FaLink />, label: "Copy link" },
+        { icon: <FaCommentAlt />, label: "SMS" },
+        { icon: <FaTwitter />, label: "X" },
+        { icon: <FaInstagram />, label: "Stories" },
+        { icon: <FaInstagram />, label: "Messages" },
+        { icon: <FaWhatsapp />, label: "WhatsApp" },
+        { icon: <FaFacebookF />, label: "Facebook" },
+        { icon: <FaDownload />, label: "Download" },
+        { icon: <FaEllipsisH />, label: "More" },
+      ];
       return (
-        <div className="flex justify-center mb-4">
-          <button
-            className="bg-chat-primary-bg text-white px-4 py-2 rounded-full hover:bg-opacity-80 transition-colors"
-            onClick={() => onSelect(action.prompt || action.type)}
-          >
-            {action.prompt || action.type}
-          </button>
+        <div className="grid grid-cols-3 gap-4 my-4">
+          {shareOptions.map((option, index) => (
+            <button
+              key={index}
+              className="flex flex-col text-river-black items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              onClick={() => onSelect(option.label)}
+            >
+              <div className="text-2xl mb-2">{option.icon}</div>
+              <span className="text-sm">{option.label}</span>
+            </button>
+          ))}
         </div>
       );
+
     default:
       return null;
   }

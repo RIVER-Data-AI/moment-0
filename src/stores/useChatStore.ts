@@ -1,23 +1,35 @@
 import { create } from "zustand";
 
+export type SenderType = "river" | "user" | "event" | "company";
+
 interface Message {
   message: string;
-  sender: "river" | "user";
+  sender: SenderType;
+  companyName?: string;
 }
 
 interface ChatState {
   messages: Message[];
-  addMessage: (message: string, sender: "river" | "user") => number;
+  addMessage: (
+    message: string,
+    sender: SenderType,
+    companyName?: string
+  ) => number;
   updateLatestMessage: (message: string, index: number) => void;
+  removeMessage: (index: number) => void;
 }
 
 const useChatStore = create<ChatState>((set) => ({
   messages: [],
-  addMessage: (message, sender) => {
+  addMessage: (message, sender, companyName) => {
     let newIndex = -1;
     set((state) => {
       newIndex = state.messages.length;
-      return { messages: [...state.messages, { message, sender }] };
+      let newMessage: Message = { message, sender };
+      if (companyName) {
+        newMessage = { ...newMessage, companyName };
+      }
+      return { messages: [...state.messages, newMessage] };
     });
     return newIndex;
   },
@@ -27,6 +39,12 @@ const useChatStore = create<ChatState>((set) => ({
       if (newMessages[index]) {
         newMessages[index].message = message;
       }
+      return { messages: newMessages };
+    }),
+  removeMessage: (index) =>
+    set((state) => {
+      const newMessages = [...state.messages];
+      newMessages.splice(index, 1);
       return { messages: newMessages };
     }),
 }));

@@ -58,18 +58,52 @@ const PROMPT_PREAMBLE =
 const SYSTEM_PROMPT = `
 The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly. The assistant is helping onboard a new user to River`;
 
-const WAVE_TOPICS_PROMPT = `ask me what do I want to ~wave about today. Give possible responses of: food, fashion, news, sports, weather, shopping, tech, news, money, travel`;
+const WAVE_TOPICS_PROMPT = `ask me what do I want to ~wave about today`;
 
-const make_prompt = (input: string, len_history: number) => {
+const WAVE_FOLLOWUP_TOPICS = ``;
+
+const make_prompt = (
+  input: string,
+  len_history: number
+): { prompt: string; customAction: CustomAction | null } => {
   const RIVER_CONVERSATION_PROMPT = [
-    `${input}. ${PROMPT_PREAMBLE} Tell me "I’ll help you to invite your friends later, but first, what’s your name?"`,
+    `${input}. ${PROMPT_PREAMBLE} Tell me "I'll help you to invite your friends later, but first, what's your name?"`,
+    `${input}. ${PROMPT_PREAMBLE} ask me where I'm waving from`,
     `${input}. ${PROMPT_PREAMBLE} ${WAVE_TOPICS_PROMPT}`,
+    `${input}. ${PROMPT_PREAMBLE} given the topic response and the location generate a response with a related company name and a potential offer for the user to act on it:
+    e.g. Location is "Santa Monica" and topic is "food" then the response could be, and it will always start with the word json:
+    json{
+      "company": "Lunetta",
+      "offer_text": "Enjoy 20% off your next visit"
+    }
+    `,
   ];
 
   const index = Math.floor(len_history / 2);
   const promptTemplate = RIVER_CONVERSATION_PROMPT[index];
-  if (promptTemplate) return promptTemplate;
-  return input;
+
+  let customAction: CustomAction | null = null;
+
+  if (index === 2) {
+    customAction = {
+      type: "wave",
+      options: WAVE_TOPICS,
+    };
+  } else if (index === 3) {
+    customAction = {
+      type: "share",
+      prompt: "Share with friends",
+    };
+  }
+  // else if (index === 1) {
+  //   customAction = {
+  //     type: "location",
+  //     prompt: "Share your location",
+  //   };
+  // }
+
+  if (promptTemplate) return { prompt: promptTemplate, customAction };
+  return { prompt: input, customAction: null };
 };
 
 export default async function handler(
@@ -83,7 +117,10 @@ export default async function handler(
     };
     console.log("conversation in", conversation);
     const conversation_history = prepareConversationHistory(conversation);
-    const prompt = make_prompt(new_message, conversation_history.length);
+    const { prompt, customAction } = make_prompt(
+      new_message,
+      conversation_history.length
+    );
     console.log("conversation_history", conversation_history);
     console.log("prompt", prompt);
     try {
@@ -104,35 +141,11 @@ export default async function handler(
         max_tokens: 1000,
       });
 
-      let fullResponse = "";
       stream.on("content", (delta) => {
-        fullResponse += delta;
         res.write(delta);
       });
 
       const chatCompletion = await stream.finalChatCompletion();
-
-      // Determine the custom action based on the response
-      let customAction: CustomAction | null = null;
-
-      if (fullResponse.toLowerCase().includes("wave about today")) {
-        customAction = {
-          type: "wave",
-          options: WAVE_TOPICS,
-        };
-      } else if (fullResponse.toLowerCase().includes("provide your location")) {
-        customAction = {
-          type: "location",
-          prompt: "Share your location",
-        };
-      } else if (
-        fullResponse.toLowerCase().includes("share this with people")
-      ) {
-        customAction = {
-          type: "share",
-          prompt: "Share with friends",
-        };
-      }
 
       res.write("END STREAM");
       res.status(200).json({ data: chatCompletion, customAction });

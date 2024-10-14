@@ -25,7 +25,8 @@ function useBottomRef() {
 
 const Chat = () => {
   const [inputValue, setInputValue] = useState("");
-  const { messages, addMessage, updateLatestMessage } = useChatStore();
+  const { messages, addMessage, updateLatestMessage, removeMessage } =
+    useChatStore();
   const { bottomRef, scrollToBottom } = useBottomRef();
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [customAction, setCustomAction] = useState<CustomAction | null>(null);
@@ -42,10 +43,10 @@ const Chat = () => {
   }, [messages]);
 
   useEffect(() => {
-    if (messages.length > 0) {
+    if (messages.length > 0 || customAction) {
       scrollToBottom();
     }
-  }, [messages]);
+  }, [messages, customAction]);
 
   const handleSendMessage = useCallback(
     async (message: string = inputValue) => {
@@ -73,6 +74,9 @@ const Chat = () => {
         const decoder = new TextDecoder();
         let aiResponse = "";
         let postStreamData = "";
+        let isJsonResponse = false;
+        let jsonResponse = "";
+
         while (true) {
           const { done, value } = await reader!.read();
 
@@ -80,28 +84,76 @@ const Chat = () => {
 
           const chunk = decoder.decode(value, { stream: true });
 
-          const endStreamIndex = chunk.indexOf("END STREAM");
-          if (endStreamIndex !== -1) {
-            aiResponse += chunk.slice(0, endStreamIndex);
-            postStreamData = chunk.slice(endStreamIndex + 10); // +10 to skip "END STREAM"
-            break;
+          if (
+            !isJsonResponse &&
+            chunk.trim().toLowerCase().startsWith("json")
+          ) {
+            isJsonResponse = true;
+            jsonResponse = chunk.trim().slice(4);
+            removeMessage(messageIndex);
+            continue;
+          }
+          if (isJsonResponse) {
+            jsonResponse += chunk;
+            const endStreamIndex = chunk.indexOf("END STREAM");
+            if (endStreamIndex !== -1) {
+              jsonResponse += chunk.slice(0, endStreamIndex);
+              postStreamData = chunk.slice(endStreamIndex + 10); // +10 to skip "END STREAM"
+              break;
+            }
           } else {
-            aiResponse += chunk;
+            const endStreamIndex = chunk.indexOf("END STREAM");
+            if (endStreamIndex !== -1) {
+              aiResponse += chunk.slice(0, endStreamIndex);
+              postStreamData = chunk.slice(endStreamIndex + 10); // +10 to skip "END STREAM"
+              break;
+            } else {
+              aiResponse += chunk;
+            }
           }
 
-          updateLatestMessage(aiResponse, messageIndex);
+          if (isJsonResponse) {
+            try {
+              // console.log("jsonResponse:", jsonResponse);
+              const parsedJsonResponse = JSON.parse(jsonResponse);
+              // console.log("Received JSON response:", parsedJsonResponse);
+
+              // Format the JSON response
+              const formattedResponse = {
+                company: parsedJsonResponse.company || "",
+                offer_text: parsedJsonResponse.offer_text || "",
+              };
+
+              // Generate messages for different types
+              const eventMessage = `${formattedResponse.company} has paid to jump on your ~wave.`;
+              const companyMessage = formattedResponse.offer_text;
+              const riverMessage = `Invite someone to join your ~wave:`;
+
+              // console.log(eventMessage, companyMessage, riverMessage);
+              // Add messages to the chat
+              addMessage(eventMessage, "event", formattedResponse.company);
+              addMessage(companyMessage, "company", formattedResponse.company);
+              addMessage(riverMessage, "river");
+
+              scrollToBottom();
+            } catch (error) {
+              console.error("Error parsing JSON response:", error);
+            }
+          }
+
+          if (aiResponse) updateLatestMessage(aiResponse, messageIndex);
           scrollToBottom();
         }
 
-        updateLatestMessage(aiResponse, messageIndex);
+        if (aiResponse) updateLatestMessage(aiResponse, messageIndex);
         scrollToBottom();
 
         // Parse the JSON response
         if (postStreamData) {
           try {
-            const jsonResponse = JSON.parse(postStreamData);
-            if (jsonResponse && jsonResponse?.customAction) {
-              setCustomAction(jsonResponse.customAction);
+            const parsedResponse = JSON.parse(postStreamData);
+            if (parsedResponse && parsedResponse?.customAction) {
+              setCustomAction(parsedResponse.customAction);
             }
           } catch (error) {
             console.error("Error parsing post-stream data:", error);
@@ -154,7 +206,11 @@ const Chat = () => {
       </AnimatePresence>
       <div
         ref={chatContainerRef}
-        className="flex-grow overflow-y-auto p-3 pb-16"
+        className={`flex-grow overflow-y-auto p-3 ${
+          customAction?.type === "wave" || customAction?.type === "share"
+            ? "pb-96"
+            : "pb-16"
+        }`}
       >
         {messages.map((msg, index) => (
           <div
@@ -163,7 +219,11 @@ const Chat = () => {
               msg.sender === "user" ? "justify-end" : "justify-start"
             }`}
           >
-            <ChatBubble message={msg.message} sender={msg.sender} />
+            <ChatBubble
+              message={msg.message}
+              sender={msg.sender}
+              companyName={msg?.companyName}
+            />
           </div>
         ))}
         <div ref={bottomRef} />
@@ -175,7 +235,7 @@ const Chat = () => {
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="absolute z-10 bottom-0 left-0 right-0 bg-white p-2 shadow-lg border-t-2 border-primary-border"
+            className="fixed z-10 bottom-0 left-0 right-0 bg-white p-2 shadow-lg border-t-2 border-primary-border"
           >
             <CustomActionButtons
               action={customAction}
