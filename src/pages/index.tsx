@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import TildeInfo from "@/components/TildeInfo";
-
+import { useRouter } from "next/router";
 const pages = [
   {
     title: "Welcome to River",
@@ -68,9 +68,14 @@ const pages = [
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useState(0);
-
+  const router = useRouter();
   const handleNext = () => {
-    setCurrentPage((prev) => (prev + 1) % pages.length);
+    if (currentPage === pages.length - 1) {
+      // If it's the last page, navigate to the chat page
+      router.push("/chat");
+    } else {
+      setCurrentPage((prev) => prev + 1);
+    }
   };
 
   return (
