@@ -18,30 +18,45 @@ const prepareConversationHistory = (
     role: "user" | "system" | "assistant";
     content: string;
   }[] = [];
-  conversation_history.forEach((conversation_item) => {
+
+  for (let i = 0; i < conversation_history.length; i += 2) {
+    const userMessage = conversation_history[i];
+    const assistantMessage = conversation_history[i + 1];
+
     conversationHistoryMessages.push(
       {
         role: "user",
-        content:
-          conversation_item.sender === "user" ? conversation_item.message : "",
+        content: userMessage.message,
       },
       {
         role: "assistant",
-        content:
-          conversation_item.sender === "river" ? conversation_item.message : "",
+        content: assistantMessage.message,
       }
     );
-  });
+  }
 
   return conversationHistoryMessages;
 };
 
+const PROMPT_PREAMBLE =
+  "Now, without using any words like 'certainly', 'of course', etc.,";
+
 const SYSTEM_PROMPT = `
-The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly. The assistant is helping onboard a new user to River, every conversation is called a ~wave. So that's the theme of the convo. It follows the order of the interview:
-- Asks for the user's name
-- Asks for the user location politetly (Where are you ~waving from?)
-- Asks "What do you want to ~wave about today?"
-`;
+The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly. The assistant is helping onboard a new user to River`;
+
+const WAVE_TOPICS_PROMPT = `ask me what do I want to ~wave about today. Give possible responses of: food, fashion, news, sports, weather, shopping, tech, news, money, travel`;
+
+const make_prompt = (input: string, len_history: number) => {
+  const RIVER_CONVERSATION_PROMPT = [
+    `${input}. ${PROMPT_PREAMBLE} Tell me "I’ll help you to invite your friends later, but first, what’s your name?"`,
+    `${input}. ${PROMPT_PREAMBLE} ${WAVE_TOPICS_PROMPT}`,
+  ];
+
+  const index = Math.floor(len_history / 2);
+  const promptTemplate = RIVER_CONVERSATION_PROMPT[index];
+  if (promptTemplate) return promptTemplate;
+  return input;
+};
 
 export default async function handler(
   req: NextApiRequest,
@@ -54,7 +69,9 @@ export default async function handler(
     };
     console.log("conversation in", conversation);
     const conversation_history = prepareConversationHistory(conversation);
+    const prompt = make_prompt(new_message, conversation_history.length);
     console.log("conversation_history", conversation_history);
+    console.log("prompt", prompt);
     try {
       const stream = openai.beta.chat.completions.stream({
         model: "gpt-4-turbo",
@@ -66,7 +83,7 @@ export default async function handler(
           ...conversation_history,
           {
             role: "user",
-            content: new_message,
+            content: prompt,
           },
         ],
         stream: true,

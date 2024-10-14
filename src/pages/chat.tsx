@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import TildeHeader from "@/components/TildeHeader";
 import ChatBubble from "@/components/ChatBubble";
+import { motion, AnimatePresence } from "framer-motion";
+
 // import DatePicker from "@/components/DatePicker";
 import useChatStore from "@/stores/useChatStore";
 
@@ -25,10 +27,17 @@ const Chat = () => {
   const { bottomRef, scrollToBottom } = useBottomRef();
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
+  const [showWelcome, setShowWelcome] = useState(true);
+
   useEffect(() => {
-    // load first system message
-    addMessage("Welcome to RIVER. Wave to someone.", "river");
-  }, []);
+    if (messages.length > 0 && showWelcome) {
+      const timer = setTimeout(() => {
+        setShowWelcome(false);
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [messages]);
 
   useEffect(() => {
     if (messages.length > 0) {
@@ -106,14 +115,27 @@ const Chat = () => {
           />
         </div>
       </div>
-      <div className="text-center p-3">
-        <div className="text-3xl text-black">Try it. Wave to someone.</div>
-        <div className="text-black">
-          And remember, on RIVER, your data is always 100% in your control. None
-          of your data gets seen, shared, or sold without your express
-          permission. It&apos;s your data!
-        </div>
-      </div>
+      <AnimatePresence>
+        {showWelcome && (
+          <motion.div
+            initial={{ opacity: 1, height: "auto" }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+          >
+            <div className="text-center p-3">
+              <div className="text-3xl text-black">
+                Try it. Wave to someone.
+              </div>
+              <div className="text-black">
+                And remember, on RIVER, your data is always 100% in your
+                control. None of your data gets seen, shared, or sold without
+                your express permission. It&apos;s your data!
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div
         ref={chatContainerRef}
         className="flex-grow overflow-y-auto p-3 pb-16"
