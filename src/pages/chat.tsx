@@ -7,6 +7,7 @@ import type { CustomAction } from "@/libs/types";
 // import DatePicker from "@/components/DatePicker";
 import useChatStore from "@/stores/useChatStore";
 import CustomActionButtons from "@/components/CustomActionButtons";
+import SignUpForm from "@/components/SignUpForm";
 
 function useBottomRef() {
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -32,6 +33,7 @@ const Chat = () => {
     removeMessage,
     showShareOverlay,
     setShowShareOverlay,
+    showSignUpForm,
   } = useChatStore();
   const { bottomRef, scrollToBottom } = useBottomRef();
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -244,6 +246,8 @@ const Chat = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <AnimatePresence>{showSignUpForm && <SignUpForm />}</AnimatePresence>
       <div className="sticky top-0 left-0 right-0 bg-white z-10 flex justify-around pt-4 px-2 gap-2 items-center border-b-2 pb-4 border-primary-border">
         <img src="/logo.png" alt="Logo" className="w-5 h-5 mr-2" />
         <TildeHeader />

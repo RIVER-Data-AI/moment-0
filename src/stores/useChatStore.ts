@@ -19,6 +19,8 @@ interface ChatState {
   removeMessage: (index: number) => void;
   showShareOverlay: boolean;
   setShowShareOverlay: (show: boolean) => void;
+  showSignUpForm: boolean;
+  setShowSignUpForm: (show: boolean) => void;
 }
 
 const useChatStore = create<ChatState>((set) => ({
@@ -51,6 +53,8 @@ const useChatStore = create<ChatState>((set) => ({
     }),
   showShareOverlay: false,
   setShowShareOverlay: (show: boolean) => set({ showShareOverlay: show }),
+  showSignUpForm: false,
+  setShowSignUpForm: (show: boolean) => set({ showSignUpForm: show }),
 }));
 
 export default useChatStore;

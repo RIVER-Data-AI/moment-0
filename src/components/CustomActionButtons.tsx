@@ -17,7 +17,7 @@ const CustomActionButtons: React.FC<{
   action: CustomAction;
   onSelect: (option: string) => void;
 }> = ({ action, onSelect }) => {
-  const { setShowShareOverlay } = useChatStore();
+  const { setShowShareOverlay, setShowSignUpForm } = useChatStore();
 
   const containerVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -55,7 +55,7 @@ const CustomActionButtons: React.FC<{
                 <div className="flex justify-center items-center py-20">
                   <button
                     className="bg-river-black text-white font-semibold flex items-center gap-2 px-10 py-2 rounded-lg border-2 border-river-black hover:bg-gray-100 transition-colors"
-                    onClick={() => onSelect("join")}
+                    onClick={() => setShowSignUpForm(true)}
                   >
                     Jump in - join RIVER
                     <FaArrowRight size={20} />
