@@ -60,8 +60,6 @@ The following is a conversation with an AI assistant. The assistant is helpful, 
 
 const WAVE_TOPICS_PROMPT = `ask me what do I want to ~wave about today`;
 
-const WAVE_FOLLOWUP_TOPICS = ``;
-
 const make_prompt = (
   input: string,
   len_history: number
