@@ -16,6 +16,7 @@ const config: Config = {
         "main-action": "#2D3748",
         "chat-primary-bg": "#2C3B4F",
         "chat-secondary-bg": "#ECECEC",
+        "icons-primary": "#ABB0BC",
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
