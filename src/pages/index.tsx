@@ -64,6 +64,22 @@ const pages = [
     title: "When you wave, you will always see this",
     content: () => <TildeInfo />,
   },
+  {
+    title: "When you wave, you will always see this",
+    content: () => <TildeInfo index={0} />,
+  },
+  {
+    title: "When you wave, you will always see this",
+    content: () => <TildeInfo index={1} />,
+  },
+  {
+    title: "When you wave, you will always see this",
+    content: () => <TildeInfo index={2} />,
+  },
+  {
+    title: "When you wave, you will always see this",
+    content: () => <TildeInfo index={3} />,
+  },
 ];
 
 export default function Home() {
@@ -84,10 +100,10 @@ export default function Home() {
         <AnimatePresence mode="wait">
           <motion.div
             key={currentPage}
-            initial={{ opacity: 0.5, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0.5, x: -50 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
             className="h-full flex flex-col justify-center"
           >
             <h1 className="text-3xl text-black font-bold mb-12">
