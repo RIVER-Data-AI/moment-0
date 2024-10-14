@@ -119,8 +119,8 @@ const Chat = () => {
   );
 
   return (
-    <div className="flex flex-col h-screen">
-      <div className="flex justify-around pt-4 px-2 gap-2 items-center border-b-2 pb-4 border-primary-border">
+    <div className="flex flex-col">
+      <div className="sticky top-0 left-0 right-0 bg-white z-10 flex justify-around pt-4 px-2 gap-2 items-center border-b-2 pb-4 border-primary-border">
         <img src="/logo.png" alt="Logo" className="w-5 h-5 mr-2" />
         <TildeHeader />
         <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
@@ -175,7 +175,7 @@ const Chat = () => {
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="absolute bottom-0 left-0 right-0 bg-white p-2 shadow-lg border-t-2 border-primary-border"
+            className="absolute z-10 bottom-0 left-0 right-0 bg-white p-2 shadow-lg border-t-2 border-primary-border"
           >
             <CustomActionButtons
               action={customAction}
@@ -187,7 +187,7 @@ const Chat = () => {
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="w-full bg-white p-3 flex items-center gap-2">
+      <div className="fixed bottom-0 left-0 right-0 bg-white p-3 flex items-center gap-2">
         <span className="text-3xl text-primary-border font-bold">~</span>
         <input
           type="text"
