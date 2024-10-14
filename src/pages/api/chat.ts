@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import type { CustomAction } from "@/libs/types";
 
 import OpenAI from "openai";
 
@@ -6,6 +7,18 @@ interface ConversationItem {
   sender: "user" | "river";
   message: string;
 }
+
+const WAVE_TOPICS = [
+  "food",
+  "fashion",
+  "news",
+  "sports",
+  "weather",
+  "shopping",
+  "tech",
+  "money",
+  "travel",
+];
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -90,13 +103,38 @@ export default async function handler(
         max_tokens: 1000,
       });
 
+      let fullResponse = "";
       stream.on("content", (delta) => {
+        fullResponse += delta;
         res.write(delta);
       });
 
       const chatCompletion = await stream.finalChatCompletion();
+
+      // Determine the custom action based on the response
+      let customAction: CustomAction | null = null;
+
+      if (fullResponse.toLowerCase().includes("wave about today")) {
+        customAction = {
+          type: "wave",
+          options: WAVE_TOPICS,
+        };
+      } else if (fullResponse.toLowerCase().includes("provide your location")) {
+        customAction = {
+          type: "location",
+          prompt: "Share your location",
+        };
+      } else if (
+        fullResponse.toLowerCase().includes("share this with people")
+      ) {
+        customAction = {
+          type: "share",
+          prompt: "Share with friends",
+        };
+      }
+
       res.write("END STREAM");
-      res.status(200).json({ data: chatCompletion });
+      res.status(200).json({ data: chatCompletion, customAction });
 
       res.end();
     } catch (error) {

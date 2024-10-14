@@ -1,10 +1,12 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useCallback, useState, useRef } from "react";
 import TildeHeader from "@/components/TildeHeader";
 import ChatBubble from "@/components/ChatBubble";
 import { motion, AnimatePresence } from "framer-motion";
+import type { CustomAction } from "@/libs/types";
 
 // import DatePicker from "@/components/DatePicker";
 import useChatStore from "@/stores/useChatStore";
+import CustomActionButtons from "@/components/CustomActionButtons";
 
 function useBottomRef() {
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -26,7 +28,7 @@ const Chat = () => {
   const { messages, addMessage, updateLatestMessage } = useChatStore();
   const { bottomRef, scrollToBottom } = useBottomRef();
   const chatContainerRef = useRef<HTMLDivElement>(null);
-
+  const [customAction, setCustomAction] = useState<CustomAction | null>(null);
   const [showWelcome, setShowWelcome] = useState(true);
 
   useEffect(() => {
@@ -45,62 +47,76 @@ const Chat = () => {
     }
   }, [messages]);
 
-  const handleSendMessage = async () => {
-    if (inputValue.trim() === "") return;
+  const handleSendMessage = useCallback(
+    async (message: string = inputValue) => {
+      if (message.trim() === "") return;
 
-    addMessage(inputValue, "user");
-    setInputValue("");
-    const messageIndex = addMessage("", "river");
+      addMessage(message, "user");
+      setInputValue("");
+      const messageIndex = addMessage("", "river");
 
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          conversation_history: messages,
-          new_message: inputValue,
-        }),
-      });
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            conversation_history: messages,
+            new_message: message,
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-      const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
-      let aiResponse = "";
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
+        let aiResponse = "";
+        let postStreamData = "";
+        while (true) {
+          const { done, value } = await reader!.read();
 
-      while (true) {
-        const { done, value } = await reader!.read();
+          if (done) break;
 
-        if (done) break;
+          const chunk = decoder.decode(value, { stream: true });
 
-        const chunk = decoder.decode(value, { stream: true });
+          const endStreamIndex = chunk.indexOf("END STREAM");
+          if (endStreamIndex !== -1) {
+            aiResponse += chunk.slice(0, endStreamIndex);
+            postStreamData = chunk.slice(endStreamIndex + 10); // +10 to skip "END STREAM"
+            break;
+          } else {
+            aiResponse += chunk;
+          }
 
-        // Check if the chunk contains the END STREAM marker
-        const endStreamIndex = chunk.indexOf("END STREAM");
-        if (endStreamIndex !== -1) {
-          // If found, only add the content before END STREAM
-          aiResponse += chunk.slice(0, endStreamIndex);
-          break; // Exit the loop as we've reached the end of the desired content
-        } else {
-          aiResponse += chunk;
+          updateLatestMessage(aiResponse, messageIndex);
+          scrollToBottom();
         }
 
         updateLatestMessage(aiResponse, messageIndex);
         scrollToBottom();
+
+        // Parse the JSON response
+        if (postStreamData) {
+          try {
+            const jsonResponse = JSON.parse(postStreamData);
+            if (jsonResponse && jsonResponse?.customAction) {
+              setCustomAction(jsonResponse.customAction);
+            }
+          } catch (error) {
+            console.error("Error parsing post-stream data:", error);
+          }
+        }
+      } catch (error) {
+        console.error("Error in chat stream:", error);
+        updateLatestMessage(
+          "Sorry, an error occurred while processing your request.",
+          messageIndex
+        );
       }
-      // Final update to ensure all content is displayed
-      updateLatestMessage(aiResponse, messageIndex);
-      scrollToBottom();
-    } catch (error) {
-      console.error("Error in chat stream:", error);
-      updateLatestMessage(
-        "Sorry, an error occurred while processing your request.",
-        messageIndex
-      );
-    }
-  };
+    },
+    [inputValue, messages, addMessage, updateLatestMessage, scrollToBottom]
+  );
 
   return (
     <div className="flex flex-col h-screen">
@@ -152,7 +168,15 @@ const Chat = () => {
         ))}
         <div ref={bottomRef} />
       </div>
-      {/* <DatePicker onSelectDate={(date) => console.log(date)} /> */}
+      {customAction && (
+        <CustomActionButtons
+          action={customAction}
+          onSelect={(option) => {
+            handleSendMessage(option);
+            setCustomAction(null);
+          }}
+        />
+      )}
       <div className="w-full bg-white p-3 flex items-center gap-2">
         <span className="text-3xl text-primary-border font-bold">~</span>
         <input
