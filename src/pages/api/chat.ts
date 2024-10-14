@@ -18,6 +18,7 @@ const WAVE_TOPICS = [
   "tech",
   "money",
   "travel",
+  "music",
 ];
 
 const openai = new OpenAI({

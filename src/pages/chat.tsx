@@ -168,15 +168,25 @@ const Chat = () => {
         ))}
         <div ref={bottomRef} />
       </div>
-      {customAction && (
-        <CustomActionButtons
-          action={customAction}
-          onSelect={(option) => {
-            handleSendMessage(option);
-            setCustomAction(null);
-          }}
-        />
-      )}
+      <AnimatePresence>
+        {customAction && (
+          <motion.div
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="absolute bottom-0 left-0 right-0 bg-white p-2 shadow-lg border-t-2 border-primary-border"
+          >
+            <CustomActionButtons
+              action={customAction}
+              onSelect={(option) => {
+                handleSendMessage(option);
+                setCustomAction(null);
+              }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className="w-full bg-white p-3 flex items-center gap-2">
         <span className="text-3xl text-primary-border font-bold">~</span>
         <input
