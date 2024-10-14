@@ -279,7 +279,9 @@ const Chat = () => {
       <div
         ref={chatContainerRef}
         className={`flex-grow overflow-y-auto p-3 ${
-          customAction?.type === "wave" || customAction?.type === "share"
+          customAction?.type === "wave" ||
+          customAction?.type === "share" ||
+          customAction?.type === "join"
             ? "pb-96"
             : "pb-16"
         }`}
