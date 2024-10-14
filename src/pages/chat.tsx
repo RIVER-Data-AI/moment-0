@@ -39,41 +39,57 @@ const Chat = () => {
   const handleSendMessage = async () => {
     if (inputValue.trim() === "") return;
 
-    // Add user message to Zustand store
     addMessage(inputValue, "user");
-    // Clear the input field
     setInputValue("");
-    // Add initial AI message to Zustand store and get its index
-    addMessage("", "river");
+    const messageIndex = addMessage("", "river");
 
-    // Send the whole conversation to the API
-    const response = await fetch("/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        conversation_history: messages,
-        new_message: inputValue,
-      }),
-    });
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          conversation_history: messages,
+          new_message: inputValue,
+        }),
+      });
 
-    const reader = response?.body?.getReader();
-    const decoder = new TextDecoder();
-    let aiResponse = "";
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-    while (true) {
-      const { done, value } = await reader!.read();
-      if (done) break;
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let aiResponse = "";
 
-      // Decode the stream and update the AI response
-      const chunk = decoder.decode(value, { stream: true });
-      console.log("chunk", chunk);
-      if (!chunk.includes("END STREAM")) {
-        aiResponse += chunk;
-        updateLatestMessage(aiResponse);
+      while (true) {
+        const { done, value } = await reader!.read();
+
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+
+        // Check if the chunk contains the END STREAM marker
+        const endStreamIndex = chunk.indexOf("END STREAM");
+        if (endStreamIndex !== -1) {
+          // If found, only add the content before END STREAM
+          aiResponse += chunk.slice(0, endStreamIndex);
+          break; // Exit the loop as we've reached the end of the desired content
+        } else {
+          aiResponse += chunk;
+        }
+
+        updateLatestMessage(aiResponse, messageIndex);
         scrollToBottom();
       }
+      // Final update to ensure all content is displayed
+      updateLatestMessage(aiResponse, messageIndex);
+      scrollToBottom();
+    } catch (error) {
+      console.error("Error in chat stream:", error);
+      updateLatestMessage(
+        "Sorry, an error occurred while processing your request.",
+        messageIndex
+      );
     }
   };
 
