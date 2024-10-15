@@ -66,6 +66,10 @@ const make_prompt = (
     customAction = {
       type: "birthdate",
     };
+  } else if (index === 4) {
+    customAction = {
+      type: "password",
+    };
   }
   // } else if (index === 3) {
   //   customAction = {

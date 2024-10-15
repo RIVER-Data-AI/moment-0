@@ -19,6 +19,7 @@ const CustomActionButtons: React.FC<{
   onSelect: (option: string) => void;
 }> = ({ action, onSelect }) => {
   const { setShowShareOverlay, setShowSignUpForm } = useChatStore();
+  const { setShowOverlayFlow2 } = useChatStore();
 
   const [month, setMonth] = useState("");
   const [day, setDay] = useState("");
@@ -61,6 +62,22 @@ const CustomActionButtons: React.FC<{
                       {option.charAt(0).toUpperCase() + option.slice(1)}
                     </button>
                   ))}
+                </div>
+              );
+            case "password":
+              return (
+                <div className="flex flex-col items-center justify-center gap-2 my-2">
+                  <input
+                    type="password"
+                    placeholder="Enter password"
+                    className="w-full text-river-black text-center py-2 px-3 rounded-full border-2 border-gray-300 focus:border-river-black focus:outline-none"
+                  />
+                  <button
+                    className="mt-2 w-full font-semibold px-6 py-2 rounded-full transition-colors bg-river-black text-white hover:bg-gray-800"
+                    onClick={() => setShowOverlayFlow2(true)}
+                  >
+                    Submit
+                  </button>
                 </div>
               );
             case "join":

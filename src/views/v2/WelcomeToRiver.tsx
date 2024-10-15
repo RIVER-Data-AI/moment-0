@@ -41,7 +41,13 @@ const WelcomeToRiver: React.FC<WelcomeToRiverProps> = ({ handleNextStep }) => {
             />
           </div>
           <div className="mt-4" onClick={handleNextStep}>
-            <TildeHeaderV2 />
+            <TildeHeaderV2
+              datapoints={dataPoints.length}
+              potentialValue={dataPoints.reduce(
+                (acc, point) => acc + point.potentialValue,
+                0
+              )}
+            />
           </div>
         </div>
 

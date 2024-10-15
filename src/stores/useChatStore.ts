@@ -33,6 +33,9 @@ interface ChatState {
   setShowSignUpForm: (show: boolean) => void;
   showEndScreen: boolean;
   setShowEndScreen: (show: boolean) => void;
+  // Flow v2
+  showOverlayFlow2: boolean;
+  setShowOverlayFlow2: (show: boolean) => void;
 }
 
 const useChatStore = create<ChatState>((set) => ({
@@ -73,6 +76,9 @@ const useChatStore = create<ChatState>((set) => ({
   setShowSignUpForm: (show: boolean) => set({ showSignUpForm: show }),
   showEndScreen: false,
   setShowEndScreen: (show: boolean) => set({ showEndScreen: show }),
+  // FLOW 2
+  showOverlayFlow2: false,
+  setShowOverlayFlow2: (show: boolean) => set({ showOverlayFlow2: show }),
 }));
 
 export default useChatStore;

@@ -6,6 +6,8 @@ import NotchedContainer from "@/components/NotchedContainer";
 import { IoMdLock } from "react-icons/io";
 
 interface DataPointsOverlayProps {
+  handleNextStep: () => void;
+  step: number;
   onClose: () => void;
 }
 
@@ -152,7 +154,11 @@ const SelectDataPoints: React.FC<SelectDataPointsProps> = ({
   );
 };
 
-const DataPointsOverlay: React.FC<DataPointsOverlayProps> = ({ onClose }) => {
+const DataPointsOverlay: React.FC<DataPointsOverlayProps> = ({
+  onClose,
+  handleNextStep,
+  step,
+}) => {
   //   const { dataPoints } = useChatStore();
 
   //   console.log("dataPoints", dataPoints);
@@ -190,12 +196,6 @@ const DataPointsOverlay: React.FC<DataPointsOverlayProps> = ({ onClose }) => {
   const totalPotentialValue = dataPoints
     .reduce((sum, point) => sum + point.potentialValue, 0)
     .toFixed(1);
-
-  const [step, setStep] = useState(1);
-
-  const handleNextStep = () => {
-    setStep(2);
-  };
 
   return (
     <div className="fixed inset-0 bg-white z-40 flex flex-col p-2">

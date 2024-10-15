@@ -73,12 +73,15 @@ const Chat = () => {
     randomNumber,
     dataPoints,
     setDataPoints,
+    // flow2
+    showOverlayFlow2,
   } = useChatStore();
   const { bottomRef, scrollToBottom } = useBottomRef();
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [customAction, setCustomAction] = useState<CustomAction | null>(null);
   const [showWelcome, setShowWelcome] = useState(true);
   const [enterprises, setEnterprises] = useState(0);
+  const [step, setStep] = useState(0);
 
   useEffect(() => {
     if (messages.length > 0 && showWelcome) {
@@ -247,10 +250,14 @@ const Chat = () => {
     [inputValue, messages, addMessage, updateLatestMessage, scrollToBottom]
   );
 
+  const handleNextStep = () => {
+    setStep(step + 1);
+  };
+
   return (
     <div className="flex flex-col">
       <AnimatePresence>
-        {true && (
+        {showOverlayFlow2 && step == 0 && (
           <motion.div
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -258,12 +265,12 @@ const Chat = () => {
             transition={{ duration: 0.3 }}
             className="fixed inset-0 bg-white z-50 text-river-black"
           >
-            <WelcomeToRiver handleNextStep={() => {}} />
+            <WelcomeToRiver handleNextStep={handleNextStep} />
           </motion.div>
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {false && (
+        {step === 1 && (
           <motion.div
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -271,12 +278,16 @@ const Chat = () => {
             transition={{ duration: 0.3 }}
             className="fixed inset-0 bg-white z-50 text-river-black"
           >
-            <DataSaleOverlay handleNextStep={() => {}} />
+            <DataPointsOverlay
+              onClose={() => {}}
+              handleNextStep={handleNextStep}
+              step={step}
+            />
           </motion.div>
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {false && (
+        {step == 3 && (
           <motion.div
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -284,7 +295,7 @@ const Chat = () => {
             transition={{ duration: 0.3 }}
             className="fixed inset-0 bg-white z-50 text-river-black"
           >
-            <DataPointsOverlay onClose={() => {}} />
+            <DataSaleOverlay handleNextStep={handleNextStep} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -389,7 +400,8 @@ const Chat = () => {
         className={`flex-grow overflow-y-auto p-3 ${
           customAction?.type === "wave" ||
           customAction?.type === "share" ||
-          customAction?.type === "join"
+          customAction?.type === "join" ||
+          customAction?.type === "password"
             ? "pb-96"
             : "pb-16"
         }`}
