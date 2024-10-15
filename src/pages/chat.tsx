@@ -106,6 +106,7 @@ const Chat = () => {
           if (done) break;
 
           const chunk = decoder.decode(value, { stream: true });
+          console.log("chunk", chunk);
 
           if (
             !isJsonResponse &&
