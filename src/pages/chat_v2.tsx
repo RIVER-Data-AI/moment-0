@@ -68,7 +68,6 @@ const Chat = () => {
     showShareOverlay,
     setShowShareOverlay,
     showSignUpForm,
-    showEndScreen,
     setRandomNumber,
     randomNumber,
     dataPoints,
