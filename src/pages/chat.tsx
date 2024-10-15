@@ -8,6 +8,7 @@ import type { CustomAction } from "@/libs/types";
 import useChatStore from "@/stores/useChatStore";
 import CustomActionButtons from "@/components/CustomActionButtons";
 import SignUpForm from "@/components/SignUpForm";
+import EndScreen from "@/components/EndScreen";
 
 function useBottomRef() {
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -34,6 +35,7 @@ const Chat = () => {
     showShareOverlay,
     setShowShareOverlay,
     showSignUpForm,
+    showEndScreen,
   } = useChatStore();
   const { bottomRef, scrollToBottom } = useBottomRef();
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -208,6 +210,20 @@ const Chat = () => {
       </AnimatePresence>
 
       <AnimatePresence>
+        {true && (
+          <motion.div
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -50, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed top-0 left-0 right-0 text-white mt-16 border-t-2 border-primary-border text-center z-50"
+          >
+            <EndScreen />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
         {showShareOverlay && (
           <motion.div
             initial={{ opacity: 1 }}
@@ -280,6 +296,7 @@ const Chat = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
       <div
         ref={chatContainerRef}
         className={`flex-grow overflow-y-auto p-3 ${
