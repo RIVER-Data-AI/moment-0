@@ -10,6 +10,7 @@ import useChatStore from "@/stores/useChatStore";
 import CustomActionButtons from "@/components/CustomActionButtons";
 import SignUpForm from "@/components/SignUpForm";
 import EndScreen from "@/components/EndScreen";
+import DataPointsOverlay from "@/views/v2/DataPointsOverlay";
 
 function extractOfferDetails(
   jsonString: string
@@ -75,8 +76,6 @@ const Chat = () => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [customAction, setCustomAction] = useState<CustomAction | null>(null);
   const [showWelcome, setShowWelcome] = useState(true);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [potentialValue, setPotentialValue] = useState(0);
   const [enterprises, setEnterprises] = useState(0);
 
   useEffect(() => {
@@ -102,9 +101,7 @@ const Chat = () => {
 
   const handleShare = () => {
     setShowShareOverlay(false);
-    setShowSuccessMessage(true);
     setTimeout(() => {
-      setShowSuccessMessage(false);
       addMessage("Join RIVER to make your data work for you", "river");
       setCustomAction({
         type: "join",
@@ -145,13 +142,17 @@ const Chat = () => {
         try {
           const parsedData: DataPoint[] = JSON.parse(extractData.data);
           console.log("parsedData", parsedData);
-          setDataPoints([...dataPoints, ...parsedData]);
+
+          // Generate random potentialValue for each datapoint
+          const dataPointsWithPotentialValue = parsedData.map((dataPoint) => ({
+            ...dataPoint,
+            potentialValue: Math.random() * 0.9 + 0.5, // Random value between 0.5 and 1
+          }));
+
+          setDataPoints([...dataPoints, ...dataPointsWithPotentialValue]);
         } catch (error) {
           console.error("Error parsing extract data:", error);
         }
-
-        // everytime a call is made update the datapoints, potential value but potential value should only increase in values between 0.01 and 0.1
-        setPotentialValue(potentialValue + Math.random() * 0.1);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -228,7 +229,6 @@ const Chat = () => {
               addMessage("Invite someone to join your ~wave:", "river");
               // update the enterprises
               setEnterprises(enterprises + 1);
-              setPotentialValue(potentialValue + randomNumber);
             }
           } catch (error) {
             console.error("Error parsing post-stream data:", error);
@@ -248,15 +248,15 @@ const Chat = () => {
   return (
     <div className="flex flex-col">
       <AnimatePresence>
-        {showSuccessMessage && (
+        {true && (
           <motion.div
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -50, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed top-0 left-0 right-0 bg-green-500 text-white p-2 text-center z-50"
+            className="fixed inset-0 bg-white z-50 text-river-black"
           >
-            Shared successfully.
+            <DataPointsOverlay onClose={() => {}} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -320,7 +320,10 @@ const Chat = () => {
         <img src="/logo.png" alt="Logo" className="w-5 h-5 mr-2" />
         <TildeHeader
           datapoints={dataPoints.length}
-          potentialValue={potentialValue}
+          potentialValue={dataPoints.reduce(
+            (sum, point) => sum + point.potentialValue,
+            0
+          )}
           enterprises={enterprises}
         />
         <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">

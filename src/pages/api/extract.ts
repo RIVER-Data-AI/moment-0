@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import type { CustomAction } from "@/libs/types";
 
 import OpenAI from "openai";
 
@@ -38,9 +37,6 @@ const prepareConversationHistory = (
 
   return conversationHistoryMessages;
 };
-
-const PROMPT_PREAMBLE =
-  "Now, without using any words like 'certainly', 'of course', etc.,";
 
 const SYSTEM_PROMPT = `The current date is ${
   new Date().toISOString().split("T")[0]
@@ -104,7 +100,7 @@ export default async function handler(
       return;
     }
 
-    let assistant_message =
+    const assistant_message =
       conversation_history[conversation_history.length - 1].content;
 
     console.log("analysing message", { assistant_message, new_message });

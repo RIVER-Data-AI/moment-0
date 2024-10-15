@@ -11,6 +11,7 @@ interface Message {
 export interface DataPoint {
   category: string;
   value: string;
+  potentialValue: number;
 }
 
 interface ChatState {

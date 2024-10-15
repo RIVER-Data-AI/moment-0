@@ -8,19 +8,6 @@ interface ConversationItem {
   message: string;
 }
 
-const WAVE_TOPICS = [
-  "food",
-  "fashion",
-  "news",
-  "sports",
-  "weather",
-  "shopping",
-  "tech",
-  "money",
-  "travel",
-  "music",
-];
-
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -57,8 +44,6 @@ const PROMPT_PREAMBLE =
 
 const SYSTEM_PROMPT = `
 The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly. The assistant is helping onboard a new user to River`;
-
-const WAVE_TOPICS_PROMPT = `ask me what do I want to ~wave about today`;
 
 const make_prompt = (
   input: string,
