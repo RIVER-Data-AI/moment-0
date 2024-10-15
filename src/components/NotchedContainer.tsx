@@ -10,11 +10,9 @@ interface NotchedContainerProps {
 export default function NotchedContainer({
   children,
   className = "",
-  borderColor = "border-gray-300",
-  notchColor = "stroke-gray-300",
 }: NotchedContainerProps) {
   return (
-    <div className={`relative bg-white rounded-lg border border-black`}>
+    <div className={className}>
       <svg
         className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-[calc(50%)] -z-10"
         width="24"

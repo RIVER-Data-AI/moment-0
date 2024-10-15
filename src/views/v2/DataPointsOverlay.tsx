@@ -88,67 +88,65 @@ const DataPointsOverlay: React.FC<DataPointsOverlayProps> = ({ onClose }) => {
           />
         </div>
       </div>
-      <div className="">
-        <NotchedContainer className="max-w-md w-full">
-          <h2 className="text-2xl font-semibold">1. Select</h2>
-          <div className="flex-1 overflow-y-auto p-1">
-            <div className="space-y-2">
-              <label className="flex items-center justify-between border-b-2 border-gray-200 py-2">
-                <div className="flex items-center">
+      <NotchedContainer className="max-w-md w-full relative bg-white rounded-lg border border-black flex flex-col overflow-y-auto">
+        <h2 className="text-2xl font-semibold p-2">1. Select</h2>
+        <div className="flex-1 overflow-y-auto">
+          <div className="space-y-2 p-2">
+            <label className="flex items-center justify-between border-b-2 border-gray-200 py-2">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  className="rounded-sm text-river-black border-river-black ring-2 ring-river-black checked:bg-river-black mr-2 focus:ring-0"
+                />
+                <span className="text-river-black font-semibold text-opacity-70 text-xs">
+                  Select all
+                </span>
+              </div>
+              <div className="flex items-center gap-10">
+                <span className="text-xs font-semibold">Data point</span>
+                <span className="text-xs text-gray-500">Value</span>
+              </div>
+            </label>
+            {dataPoints.map((point, index) => (
+              <div
+                key={index}
+                className="flex justify-between items-center border-b-2 border-gray-200 py-2"
+              >
+                <label className="flex items-center">
                   <input
                     type="checkbox"
                     className="rounded-sm text-river-black border-river-black ring-2 ring-river-black checked:bg-river-black mr-2 focus:ring-0"
                   />
-                  <span className="text-river-black font-semibold text-opacity-70 text-xs">
-                    Select all
+                  <span className="text-river-black text-opacity-70 text-xs">
+                    {point.category}
+                  </span>
+                </label>
+                <div className="flex items-center">
+                  <span className="text-xs font-semibold">{point.value}</span>
+                  <span className="ml-2 text-gray-500 text-xs">
+                    · $ {point.potentialValue.toFixed(1)} USD
                   </span>
                 </div>
-                <div className="flex items-center gap-10">
-                  <span className="text-xs font-semibold">Data point</span>
-                  <span className="text-xs text-gray-500">Value</span>
-                </div>
-              </label>
-              {dataPoints.map((point, index) => (
-                <div
-                  key={index}
-                  className="flex justify-between items-center border-b-2 border-gray-200 py-2"
-                >
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      className="rounded-sm text-river-black border-river-black ring-2 ring-river-black checked:bg-river-black mr-2 focus:ring-0"
-                    />
-                    <span className="text-river-black text-opacity-70 text-xs">
-                      {point.category}
-                    </span>
-                  </label>
-                  <div className="flex items-center">
-                    <span className="text-xs font-semibold">{point.value}</span>
-                    <span className="ml-2 text-gray-500 text-xs">
-                      · $ {point.potentialValue.toFixed(1)} USD
-                    </span>
-                  </div>
-                </div>
-              ))}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="bottom-0 w-full bg-white p-2">
+          <div className="flex justify-between mb-4 gap-2">
+            <div className="flex w-full flex-col items-center justify-center border-2 border-gray-200 p-2">
+              <span className="text-lg">{dataPoints.length}</span>
+              <span className="text-xs">Data points</span>
+            </div>
+            <div className="flex w-full flex-col items-center justify-center border-2 border-gray-200 p-2">
+              <span className="text-lg">{totalPotentialValue}</span>
+              <span className="text-xs">Total potential value</span>
             </div>
           </div>
-          <div className="bottom-0 w-full bg-white p-2">
-            <div className="flex justify-between mb-4 gap-2">
-              <div className="flex w-full flex-col items-center justify-center border-2 border-gray-200 p-2">
-                <span className="text-lg">{dataPoints.length}</span>
-                <span className="text-xs">Data points</span>
-              </div>
-              <div className="flex w-full flex-col items-center justify-center border-2 border-gray-200 p-2">
-                <span className="text-lg">{totalPotentialValue}</span>
-                <span className="text-xs">Total potential value</span>
-              </div>
-            </div>
-            <button className="w-full bg-river-black text-white py-3 rounded-lg font-semibold">
-              Review and sell →
-            </button>
-          </div>
-        </NotchedContainer>
-      </div>
+          <button className="w-full bg-river-black text-white py-3 rounded-lg font-semibold">
+            Review and sell →
+          </button>
+        </div>
+      </NotchedContainer>
     </div>
   );
 };
