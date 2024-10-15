@@ -123,6 +123,7 @@ const Chat = () => {
             if (endStreamIndex !== -1) {
               jsonResponse += chunk.slice(0, endStreamIndex);
               postStreamData = chunk.slice(endStreamIndex + 10); // +10 to skip "END STREAM"
+              console.log("found end stream for json: break");
               break;
             }
           } else {
@@ -130,6 +131,7 @@ const Chat = () => {
             if (endStreamIndex !== -1) {
               aiResponse += chunk.slice(0, endStreamIndex);
               postStreamData = chunk.slice(endStreamIndex + 10); // +10 to skip "END STREAM"
+              console.log("found end stream for normal response: break");
               break;
             } else {
               aiResponse += chunk;
