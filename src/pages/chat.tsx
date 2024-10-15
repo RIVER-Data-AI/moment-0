@@ -10,6 +10,35 @@ import CustomActionButtons from "@/components/CustomActionButtons";
 import SignUpForm from "@/components/SignUpForm";
 import EndScreen from "@/components/EndScreen";
 
+function extractOfferDetails(
+  jsonString: string
+): { company: string; offer_text: string } | null {
+  try {
+    // Parse the entire JSON string
+    const parsedData = JSON.parse(jsonString);
+
+    // Extract the content from the nested structure
+    const content = parsedData.data.choices[0].message.content;
+
+    // Check if the content starts with "json"
+    if (content.startsWith("json")) {
+      // Remove the "json" prefix and parse the remaining JSON
+      const offerJson = JSON.parse(content.slice(4));
+
+      // Extract and return the company and offer_text
+      return {
+        company: offerJson.company,
+        offer_text: offerJson.offer_text,
+      };
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Error parsing JSON:", error);
+    return null;
+  }
+}
+
 function useBottomRef() {
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -138,34 +167,34 @@ const Chat = () => {
             }
           }
 
-          if (isJsonResponse) {
-            try {
-              console.log("jsonResponse to be parsed", jsonResponse);
-              const parsedJsonResponse = JSON.parse(jsonResponse);
-              // console.log("Received JSON response:", parsedJsonResponse);
+          // if (isJsonResponse) {
+          //   try {
+          //     console.log("jsonResponse to be parsed", jsonResponse);
+          //     const parsedJsonResponse = JSON.parse(jsonResponse);
+          //     // console.log("Received JSON response:", parsedJsonResponse);
 
-              // Format the JSON response
-              const formattedResponse = {
-                company: parsedJsonResponse.company || "",
-                offer_text: parsedJsonResponse.offer_text || "",
-              };
+          //     // Format the JSON response
+          //     const formattedResponse = {
+          //       company: parsedJsonResponse.company || "",
+          //       offer_text: parsedJsonResponse.offer_text || "",
+          //     };
 
-              // Generate messages for different types
-              const eventMessage = `${formattedResponse.company} has paid to jump on your ~wave.`;
-              const companyMessage = formattedResponse.offer_text;
-              const riverMessage = `Invite someone to join your ~wave:`;
+          //     // Generate messages for different types
+          //     const eventMessage = `${formattedResponse.company} has paid to jump on your ~wave.`;
+          //     const companyMessage = formattedResponse.offer_text;
+          //     const riverMessage = `Invite someone to join your ~wave:`;
 
-              // console.log(eventMessage, companyMessage, riverMessage);
-              // Add messages to the chat
-              addMessage(eventMessage, "event", formattedResponse.company);
-              addMessage(companyMessage, "company", formattedResponse.company);
-              addMessage(riverMessage, "river");
+          //     // console.log(eventMessage, companyMessage, riverMessage);
+          //     // Add messages to the chat
+          //     addMessage(eventMessage, "event", formattedResponse.company);
+          //     addMessage(companyMessage, "company", formattedResponse.company);
+          //     addMessage(riverMessage, "river");
 
-              scrollToBottom();
-            } catch (error) {
-              console.error("Error parsing JSON response:", error);
-            }
-          }
+          //     scrollToBottom();
+          //   } catch (error) {
+          //     console.error("Error parsing JSON response:", error);
+          //   }
+          // }
 
           if (aiResponse) updateLatestMessage(aiResponse, messageIndex);
           scrollToBottom();
@@ -180,6 +209,17 @@ const Chat = () => {
             const parsedResponse = JSON.parse(postStreamData);
             if (parsedResponse && parsedResponse?.customAction) {
               setCustomAction(parsedResponse.customAction);
+            }
+            const offerDetails = extractOfferDetails(postStreamData);
+            if (offerDetails) {
+              const { company, offer_text } = offerDetails;
+              addMessage(
+                `${company} has paid to jump on your ~wave.`,
+                "event",
+                company
+              );
+              addMessage(offer_text, "company", company);
+              addMessage("Invite someone to join your ~wave:", "river");
             }
           } catch (error) {
             console.error("Error parsing post-stream data:", error);
