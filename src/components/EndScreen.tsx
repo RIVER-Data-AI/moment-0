@@ -6,11 +6,7 @@ import { BiWorld } from "react-icons/bi";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import TildeHeader from "./TildeHeader";
 
-interface EndScreenProps {
-  // Add any props if needed
-}
-
-const EndScreen: React.FC<EndScreenProps> = () => {
+const EndScreen: React.FC = () => {
   return (
     <div className="flex flex-col h-screen">
       <Header />
