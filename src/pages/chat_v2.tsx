@@ -11,6 +11,8 @@ import CustomActionButtons from "@/components/CustomActionButtons";
 import SignUpForm from "@/components/SignUpForm";
 import EndScreen from "@/components/EndScreen";
 import DataPointsOverlay from "@/views/v2/DataPointsOverlay";
+import DataSaleOverlay from "@/views/v2/DataSaleOverlay";
+import WelcomeToRiver from "@/views/v2/WelcomeToRiver";
 
 function extractOfferDetails(
   jsonString: string
@@ -249,6 +251,32 @@ const Chat = () => {
     <div className="flex flex-col">
       <AnimatePresence>
         {true && (
+          <motion.div
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -50, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 bg-white z-50 text-river-black"
+          >
+            <WelcomeToRiver handleNextStep={() => {}} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {false && (
+          <motion.div
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -50, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 bg-white z-50 text-river-black"
+          >
+            <DataSaleOverlay handleNextStep={() => {}} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {false && (
           <motion.div
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
