@@ -112,17 +112,16 @@ const Chat = () => {
             chunk.trim().toLowerCase().startsWith("json")
           ) {
             isJsonResponse = true;
-            jsonResponse = chunk.trim().slice(4).trim(); // Remove "json" and any leading whitespace
+            jsonResponse = chunk.trim().slice(4);
             removeMessage(messageIndex);
             continue;
           }
-
           if (isJsonResponse) {
             jsonResponse += chunk;
-            const endStreamIndex = jsonResponse.indexOf("END STREAM");
+            const endStreamIndex = chunk.indexOf("END STREAM");
             if (endStreamIndex !== -1) {
-              jsonResponse = jsonResponse.slice(0, endStreamIndex).trim();
-              postStreamData = chunk.slice(chunk.indexOf("END STREAM") + 10); // +10 to skip "END STREAM"
+              jsonResponse += chunk.slice(0, endStreamIndex);
+              postStreamData = chunk.slice(endStreamIndex + 10); // +10 to skip "END STREAM"
               break;
             }
           } else {
@@ -138,7 +137,11 @@ const Chat = () => {
 
           if (isJsonResponse) {
             try {
+              // console.log("jsonResponse:", jsonResponse);
               const parsedJsonResponse = JSON.parse(jsonResponse);
+              // console.log("Received JSON response:", parsedJsonResponse);
+
+              // Format the JSON response
               const formattedResponse = {
                 company: parsedJsonResponse.company || "",
                 offer_text: parsedJsonResponse.offer_text || "",
@@ -158,13 +161,15 @@ const Chat = () => {
               scrollToBottom();
             } catch (error) {
               console.error("Error parsing JSON response:", error);
-              console.log("Received JSON string:", jsonResponse);
             }
           }
 
           if (aiResponse) updateLatestMessage(aiResponse, messageIndex);
           scrollToBottom();
         }
+
+        if (aiResponse) updateLatestMessage(aiResponse, messageIndex);
+        scrollToBottom();
 
         // Parse the JSON response
         if (postStreamData) {
