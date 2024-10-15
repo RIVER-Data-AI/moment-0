@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 // import useChatStore from "@/stores/useChatStore";
 import TildeHeaderV2 from "./TildeHeaderV2";
 import { ImCross } from "react-icons/im";
@@ -61,6 +61,36 @@ const DataPointsOverlay: React.FC<DataPointsOverlayProps> = ({ onClose }) => {
 
   //   console.log("dataPoints", dataPoints);
 
+  const [selectedDataPoints, setSelectedDataPoints] = useState<boolean[]>(
+    new Array(dataPoints.length).fill(false)
+  );
+  const [selectAll, setSelectAll] = useState(false);
+
+  const handleSelectAll = () => {
+    setSelectAll(!selectAll);
+    setSelectedDataPoints(new Array(dataPoints.length).fill(!selectAll));
+  };
+
+  const handleDataPointSelect = (index: number) => {
+    const newSelectedDataPoints = [...selectedDataPoints];
+    newSelectedDataPoints[index] = !newSelectedDataPoints[index];
+    setSelectedDataPoints(newSelectedDataPoints);
+    setSelectAll(newSelectedDataPoints.every(Boolean));
+  };
+
+  const selectedSummary = useMemo(() => {
+    return dataPoints.reduce(
+      (acc, point, index) => {
+        if (selectedDataPoints[index]) {
+          acc.count++;
+          acc.totalValue += point.potentialValue;
+        }
+        return acc;
+      },
+      { count: 0, totalValue: 0 }
+    );
+  }, [selectedDataPoints]);
+
   const totalPotentialValue = dataPoints
     .reduce((sum, point) => sum + point.potentialValue, 0)
     .toFixed(1);
@@ -96,6 +126,8 @@ const DataPointsOverlay: React.FC<DataPointsOverlayProps> = ({ onClose }) => {
               <div className="flex items-center">
                 <input
                   type="checkbox"
+                  checked={selectAll}
+                  onChange={handleSelectAll}
                   className="rounded-sm text-river-black border-river-black ring-2 ring-river-black checked:bg-river-black mr-2 focus:ring-0"
                 />
                 <span className="text-river-black font-semibold text-opacity-70 text-xs">
@@ -115,6 +147,8 @@ const DataPointsOverlay: React.FC<DataPointsOverlayProps> = ({ onClose }) => {
                 <label className="flex items-center">
                   <input
                     type="checkbox"
+                    checked={selectedDataPoints[index]}
+                    onChange={() => handleDataPointSelect(index)}
                     className="rounded-sm text-river-black border-river-black ring-2 ring-river-black checked:bg-river-black mr-2 focus:ring-0"
                   />
                   <span className="text-river-black text-opacity-70 text-xs">
@@ -134,11 +168,13 @@ const DataPointsOverlay: React.FC<DataPointsOverlayProps> = ({ onClose }) => {
         <div className="bottom-0 w-full bg-white p-2">
           <div className="flex justify-between mb-4 gap-2">
             <div className="flex w-full flex-col items-center justify-center border-2 border-gray-200 p-2">
-              <span className="text-lg">{dataPoints.length}</span>
+              <span className="text-lg">{selectedSummary.count}</span>
               <span className="text-xs">Data points</span>
             </div>
             <div className="flex w-full flex-col items-center justify-center border-2 border-gray-200 p-2">
-              <span className="text-lg">{totalPotentialValue}</span>
+              <span className="text-lg">
+                {selectedSummary.totalValue.toFixed(1)}
+              </span>
               <span className="text-xs">Total potential value</span>
             </div>
           </div>
