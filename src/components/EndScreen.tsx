@@ -66,23 +66,23 @@ const Post: React.FC<PostProps> = ({ username, content, images, stats }) => {
         </div>
         <div className="py-2 text-start text-sm">{content}</div>
         {images && images.length > 0 && (
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2 max-h-48 overflow-hidden">
             {images.length === 3 ? (
               <>
                 <img
                   src={images[0]}
                   alt="Post image 1"
-                  className="col-span-1 row-span-2 h-full object-cover"
+                  className="col-span-1 row-span-2 h-48 object-cover"
                 />
                 <img
                   src={images[1]}
                   alt="Post image 2"
-                  className="col-span-1 h-full object-cover"
+                  className="col-span-1 h-24 object-cover"
                 />
                 <img
                   src={images[2]}
                   alt="Post image 3"
-                  className="col-span-1 h-full object-cover"
+                  className="col-span-1 h-24 object-cover"
                 />
               </>
             ) : (
