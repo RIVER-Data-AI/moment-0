@@ -8,6 +8,11 @@ interface Message {
   companyName?: string;
 }
 
+export interface DataPoint {
+  category: string;
+  value: string;
+}
+
 interface ChatState {
   messages: Message[];
   addMessage: (
@@ -15,6 +20,8 @@ interface ChatState {
     sender: SenderType,
     companyName?: string
   ) => number;
+  dataPoints: DataPoint[];
+  setDataPoints: (dataPoints: DataPoint[]) => void;
   randomNumber: number;
   setRandomNumber: (number: number) => void;
   updateLatestMessage: (message: string, index: number) => void;
@@ -30,6 +37,8 @@ interface ChatState {
 const useChatStore = create<ChatState>((set) => ({
   messages: [],
   randomNumber: 0,
+  dataPoints: [],
+  setDataPoints: (dataPoints: DataPoint[]) => set({ dataPoints }),
   setRandomNumber: (number) => set({ randomNumber: number }),
   addMessage: (message, sender, companyName) => {
     let newIndex = -1;

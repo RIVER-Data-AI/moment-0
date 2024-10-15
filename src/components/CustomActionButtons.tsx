@@ -1,6 +1,7 @@
 import type { CustomAction } from "@/libs/types";
 import useChatStore from "@/stores/useChatStore";
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import {
   FaLink,
   FaCommentAlt,
@@ -18,6 +19,18 @@ const CustomActionButtons: React.FC<{
   onSelect: (option: string) => void;
 }> = ({ action, onSelect }) => {
   const { setShowShareOverlay, setShowSignUpForm } = useChatStore();
+
+  const [month, setMonth] = useState("");
+  const [day, setDay] = useState("");
+  const [year, setYear] = useState("");
+  const [isComplete, setIsComplete] = useState(false);
+
+  useEffect(() => {
+    setIsComplete(
+      month !== "" && day !== "" && year !== "" && year.length === 4
+    );
+    console.log("isComplete", isComplete);
+  }, [month, day, year]);
 
   const containerVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -59,6 +72,53 @@ const CustomActionButtons: React.FC<{
                   >
                     Jump in - join RIVER
                     <FaArrowRight size={20} />
+                  </button>
+                </div>
+              );
+            case "birthdate": // create three inputs for month, day and year and input should be numeric
+              return (
+                <div className="flex flex-col items-center justify-center gap-2 my-2">
+                  <div className="flex items-center justify-center gap-2 w-full">
+                    <input
+                      type="number"
+                      pattern="\d*"
+                      placeholder="MM"
+                      maxLength={2}
+                      value={month}
+                      onChange={(e) => setMonth(e.target.value)}
+                      className="w-full text-river-black text-center py-2 px-3 rounded-full border-2 border-gray-300 focus:border-river-black focus:outline-none"
+                    />
+                    <input
+                      type="number"
+                      pattern="\d*"
+                      placeholder="DD"
+                      maxLength={2}
+                      value={day}
+                      onChange={(e) => setDay(e.target.value)}
+                      className="w-full text-river-black text-center py-2 px-3 rounded-full border-2 border-gray-300 focus:border-river-black focus:outline-none"
+                    />
+                    <input
+                      type="number"
+                      pattern="\d*"
+                      placeholder="YYYY"
+                      maxLength={4}
+                      value={year}
+                      onChange={(e) => setYear(e.target.value)}
+                      className="w-full text-river-black text-center py-2 px-3 rounded-full border-2 border-gray-300 focus:border-river-black focus:outline-none"
+                    />
+                  </div>
+                  <button
+                    className={`mt-2 w-full font-semibold px-6 py-2 rounded-full transition-colors ${
+                      isComplete
+                        ? "bg-river-black text-white hover:bg-gray-800"
+                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    }`}
+                    onClick={() =>
+                      isComplete && onSelect(`${month}/${day}/${year}`)
+                    }
+                    disabled={!isComplete}
+                  >
+                    Submit
                   </button>
                 </div>
               );
