@@ -79,7 +79,7 @@ const Chat = () => {
   const [enterprises, setEnterprises] = useState(0);
 
   useEffect(() => {
-    if (messages.length > 0 && showWelcome) {
+    if (messages.length > 1 && showWelcome) {
       const timer = setTimeout(() => {
         setShowWelcome(false);
       }, 1000);
@@ -87,6 +87,57 @@ const Chat = () => {
       return () => clearTimeout(timer);
     }
   }, [messages]);
+
+  // call the chat api on component mount
+  useEffect(() => {
+    const initializeChat = async () => {
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            conversation_history: messages,
+            new_message: "",
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
+        let aiResponse = "";
+
+        while (true) {
+          const { done, value } = await reader!.read();
+
+          if (done) break;
+
+          const chunk = decoder.decode(value, { stream: true });
+          aiResponse += chunk;
+
+          const endStreamIndex = chunk.indexOf("END STREAM");
+          if (endStreamIndex !== -1) {
+            aiResponse = aiResponse.slice(
+              0,
+              aiResponse.length - (chunk.length - endStreamIndex)
+            );
+            break;
+          }
+        }
+
+        if (aiResponse) {
+          addMessage(aiResponse, "river");
+        }
+      } catch (error) {
+        console.error("Error initializing chat:", error);
+        addMessage("Sorry, there was an error initializing the chat.", "river");
+      }
+    };
+
+    initializeChat();
+  }, []);
 
   useEffect(() => {
     if (messages.length > 0 || customAction) {

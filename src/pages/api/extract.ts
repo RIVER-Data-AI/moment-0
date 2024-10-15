@@ -19,6 +19,10 @@ const prepareConversationHistory = (
     content: string;
   }[] = [];
 
+  if (conversation_history.length === 0) {
+    return conversationHistoryMessages;
+  }
+
   for (let i = 0; i < conversation_history.length; i += 2) {
     const userMessage = conversation_history[i];
     const assistantMessage = conversation_history[i + 1];
@@ -26,11 +30,11 @@ const prepareConversationHistory = (
     conversationHistoryMessages.push(
       {
         role: "user",
-        content: userMessage.message,
+        content: userMessage?.message || "",
       },
       {
         role: "assistant",
-        content: assistantMessage.message,
+        content: assistantMessage?.message || "",
       }
     );
   }
