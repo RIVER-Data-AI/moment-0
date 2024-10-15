@@ -94,8 +94,22 @@ export default function Home() {
     }
   };
 
+  const handleBack = () => {
+    if (currentPage > 0) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-between min-h-screen p-6 text-center">
+      {currentPage > 0 && (
+        <button
+          className="top-6 self-start left-6 text-black font-semibold py-2 rounded-md"
+          onClick={handleBack}
+        >
+          Back
+        </button>
+      )}
       <main className="flex-1 w-full overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div

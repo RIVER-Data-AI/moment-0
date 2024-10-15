@@ -65,6 +65,8 @@ const Chat = () => {
     setShowShareOverlay,
     showSignUpForm,
     showEndScreen,
+    setRandomNumber,
+    randomNumber,
   } = useChatStore();
   const { bottomRef, scrollToBottom } = useBottomRef();
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -87,6 +89,11 @@ const Chat = () => {
       scrollToBottom();
     }
   }, [messages, customAction]);
+
+  useEffect(() => {
+    const num = Math.floor(Math.random() * 5) + 1;
+    setRandomNumber(num);
+  }, []);
 
   const handleShare = () => {
     setShowShareOverlay(false);
@@ -283,7 +290,7 @@ const Chat = () => {
                   I&apos;ve just created a ~wave on the new RIVER app
                 </p>
                 <p className="text-2xl font-semibold mb-4">
-                  and earned $2 from a tiny amount of my data.
+                  and earned ${randomNumber} from a tiny amount of my data.
                 </p>
                 <p className="text-2xl mb-2">
                   Imagine how much we can{" "}

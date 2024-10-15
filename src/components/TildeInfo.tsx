@@ -27,11 +27,39 @@ const TildeInfo: React.FC<{ index?: number }> = ({ index }) => {
             )} pl-3 ${textColor(sectionIndex)}`}
           >
             <span
-              className={isHighlighted(sectionIndex) ? "" : "text-gray-400"}
+              className={
+                isHighlighted(sectionIndex)
+                  ? ""
+                  : "text-gray-400 text-opacity-40"
+              }
             >
-              {sectionIndex === 0 && <MdLayers />}
-              {sectionIndex === 1 && <CoinIcon />}
-              {sectionIndex === 2 && <PiCoinsBold />}
+              {sectionIndex === 0 && (
+                <MdLayers
+                  className={`${
+                    isHighlighted(sectionIndex)
+                      ? "text-blue-500"
+                      : "text-gray-400 text-opacity-40"
+                  }`}
+                />
+              )}
+              {sectionIndex === 1 && (
+                <CoinIcon
+                  className={`${
+                    isHighlighted(sectionIndex)
+                      ? "text-purple-500"
+                      : "text-gray-400 text-opacity-40"
+                  }`}
+                />
+              )}
+              {sectionIndex === 2 && (
+                <CoinIcon
+                  className={`${
+                    isHighlighted(sectionIndex)
+                      ? "text-green-500"
+                      : "text-gray-400 text-opacity-40"
+                  }`}
+                />
+              )}
               {sectionIndex === 3 && <FaBriefcase size={15} />}
             </span>
             <span className="ml-1">0</span>

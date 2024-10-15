@@ -15,6 +15,8 @@ interface ChatState {
     sender: SenderType,
     companyName?: string
   ) => number;
+  randomNumber: number;
+  setRandomNumber: (number: number) => void;
   updateLatestMessage: (message: string, index: number) => void;
   removeMessage: (index: number) => void;
   showShareOverlay: boolean;
@@ -27,6 +29,8 @@ interface ChatState {
 
 const useChatStore = create<ChatState>((set) => ({
   messages: [],
+  randomNumber: 0,
+  setRandomNumber: (number) => set({ randomNumber: number }),
   addMessage: (message, sender, companyName) => {
     let newIndex = -1;
     set((state) => {

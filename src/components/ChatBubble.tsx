@@ -1,5 +1,5 @@
 import React from "react";
-import { SenderType } from "../stores/useChatStore";
+import useChatStore, { SenderType } from "../stores/useChatStore";
 import { MdBusinessCenter } from "react-icons/md";
 
 interface ChatBubbleProps {
@@ -41,12 +41,12 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
   companyName,
 }) => {
   const config = senderConfig[sender];
+  const { randomNumber } = useChatStore();
 
   const getTitle = () => {
     if (sender === "river") return config.title;
     if (sender === "company") return companyName ?? "company";
     if (sender === "event") {
-      const randomNumber = Math.floor(Math.random() * 5) + 1;
       return `+$${randomNumber}`;
     }
     return null;
