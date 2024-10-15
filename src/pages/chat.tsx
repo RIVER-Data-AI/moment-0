@@ -127,7 +127,7 @@ const Chat = () => {
         let aiResponse = "";
         let postStreamData = "";
         let isJsonResponse = false;
-        let jsonResponse = "";
+        // let jsonResponse = "";
 
         while (true) {
           const { done, value } = await reader!.read();
@@ -142,15 +142,15 @@ const Chat = () => {
             chunk.trim().toLowerCase().startsWith("json")
           ) {
             isJsonResponse = true;
-            jsonResponse = chunk.trim().slice(4);
+            // jsonResponse = chunk.trim().slice(4);
             removeMessage(messageIndex);
             continue;
           }
           if (isJsonResponse) {
-            jsonResponse += chunk;
+            // jsonResponse += chunk;
             const endStreamIndex = chunk.indexOf("END STREAM");
             if (endStreamIndex !== -1) {
-              jsonResponse += chunk.slice(0, endStreamIndex);
+              // jsonResponse += chunk.slice(0, endStreamIndex);
               postStreamData = chunk.slice(endStreamIndex + 10); // +10 to skip "END STREAM"
               console.log("found end stream for json: break");
               break;
