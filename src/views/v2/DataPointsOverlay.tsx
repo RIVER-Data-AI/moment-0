@@ -2,6 +2,7 @@ import React from "react";
 // import useChatStore from "@/stores/useChatStore";
 import TildeHeaderV2 from "./TildeHeaderV2";
 import { ImCross } from "react-icons/im";
+import NotchedContainer from "@/components/NotchedContainer";
 
 interface DataPointsOverlayProps {
   onClose: () => void;
@@ -73,7 +74,7 @@ const DataPointsOverlay: React.FC<DataPointsOverlayProps> = ({ onClose }) => {
         <ImCross size={15} />
         <span className="font-semibold text-sm ml-2">Close</span>
       </div>
-      <div className="flex justify-between items-center border-b border-gray-200">
+      <div className="flex justify-between items-center pb-4">
         <TildeHeaderV2
           datapoints={dataPoints.length}
           potentialValue={Number(totalPotentialValue)}
@@ -87,28 +88,43 @@ const DataPointsOverlay: React.FC<DataPointsOverlayProps> = ({ onClose }) => {
           />
         </div>
       </div>
-      <div>
-        <div className="relative mt-2 border-2 border-river-black">
-          <div className="bg-red-400 top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[10px] border-b-river-black"></div>
-          <h2 className="text-2xl font-semibold mb-4">1. Select</h2>
-          <div className="flex-1 overflow-y-auto p-4">
+      <div className="">
+        <NotchedContainer className="max-w-md w-full">
+          <h2 className="text-2xl font-semibold">1. Select</h2>
+          <div className="flex-1 overflow-y-auto p-1">
             <div className="space-y-2">
-              <label className="flex items-center">
-                <input type="checkbox" checked className="mr-2" />
-                <span>Select all</span>
+              <label className="flex items-center justify-between border-b-2 border-gray-200 py-2">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    className="rounded-sm text-river-black border-river-black ring-2 ring-river-black checked:bg-river-black mr-2 focus:ring-0"
+                  />
+                  <span className="text-river-black font-semibold text-opacity-70 text-xs">
+                    Select all
+                  </span>
+                </div>
+                <div className="flex items-center gap-10">
+                  <span className="text-xs font-semibold">Data point</span>
+                  <span className="text-xs text-gray-500">Value</span>
+                </div>
               </label>
               {dataPoints.map((point, index) => (
                 <div
                   key={index}
-                  className="flex justify-between items-center border-b border-gray-200 py-2"
+                  className="flex justify-between items-center border-b-2 border-gray-200 py-2"
                 >
                   <label className="flex items-center">
-                    <input type="checkbox" checked className="mr-2" />
-                    <span>{point.category}</span>
+                    <input
+                      type="checkbox"
+                      className="rounded-sm text-river-black border-river-black ring-2 ring-river-black checked:bg-river-black mr-2 focus:ring-0"
+                    />
+                    <span className="text-river-black text-opacity-70 text-xs">
+                      {point.category}
+                    </span>
                   </label>
                   <div className="flex items-center">
-                    <span>{point.value}</span>
-                    <span className="ml-2 text-gray-500">
+                    <span className="text-xs font-semibold">{point.value}</span>
+                    <span className="ml-2 text-gray-500 text-xs">
                       · $ {point.potentialValue.toFixed(1)} USD
                     </span>
                   </div>
@@ -116,16 +132,22 @@ const DataPointsOverlay: React.FC<DataPointsOverlayProps> = ({ onClose }) => {
               ))}
             </div>
           </div>
-          <div className="p-4 border-t border-gray-200">
-            <div className="flex justify-between mb-4">
-              <span>{dataPoints.length} Data points</span>
-              <span>Total potential value: ${totalPotentialValue}</span>
+          <div className="bottom-0 w-full bg-white p-2">
+            <div className="flex justify-between mb-4 gap-2">
+              <div className="flex w-full flex-col items-center justify-center border-2 border-gray-200 p-2">
+                <span className="text-lg">{dataPoints.length}</span>
+                <span className="text-xs">Data points</span>
+              </div>
+              <div className="flex w-full flex-col items-center justify-center border-2 border-gray-200 p-2">
+                <span className="text-lg">{totalPotentialValue}</span>
+                <span className="text-xs">Total potential value</span>
+              </div>
             </div>
-            <button className="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold">
+            <button className="w-full bg-river-black text-white py-3 rounded-lg font-semibold">
               Review and sell →
             </button>
           </div>
-        </div>
+        </NotchedContainer>
       </div>
     </div>
   );
