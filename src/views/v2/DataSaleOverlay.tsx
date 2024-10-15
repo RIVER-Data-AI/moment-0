@@ -1,12 +1,10 @@
 import React from "react";
 
 interface DataSaleOverlayProps {
-  onClose?: () => void;
   handleNextStep: () => void;
 }
 
 const DataSaleOverlay: React.FC<DataSaleOverlayProps> = ({
-  onClose,
   handleNextStep,
 }) => {
   return (
@@ -15,7 +13,8 @@ const DataSaleOverlay: React.FC<DataSaleOverlayProps> = ({
         <div>
           <h2 className="text-gray-500 text-xl mb-2">Well done</h2>
           <h1 className="text-3xl font-bold text-gray-800 mb-6">
-            You've made your first data sale and earned your first $$ on RIVER.
+            You&apos;ve made your first data sale and earned your first $$ on
+            RIVER.
           </h1>
           <div className="space-y-4 mb-8">
             <div className="flex items-start">

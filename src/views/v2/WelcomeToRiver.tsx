@@ -3,14 +3,10 @@ import React from "react";
 import TildeHeaderV2 from "./TildeHeaderV2";
 
 interface WelcomeToRiverProps {
-  onClose?: () => void;
   handleNextStep: () => void;
 }
 
-const WelcomeToRiver: React.FC<WelcomeToRiverProps> = ({
-  onClose,
-  handleNextStep,
-}) => {
+const WelcomeToRiver: React.FC<WelcomeToRiverProps> = ({ handleNextStep }) => {
   const { dataPoints } = useChatStore();
 
   return (
@@ -30,7 +26,7 @@ const WelcomeToRiver: React.FC<WelcomeToRiverProps> = ({
             <div className="flex items-start">
               <p className="text-gray-700">
                 This is your data. Keep it private or earn money from selling it
-                - you're in control!
+                - you&apos;re in control!
               </p>
             </div>
           </div>
