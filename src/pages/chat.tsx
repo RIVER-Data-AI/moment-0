@@ -74,6 +74,10 @@ const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
+  const [datapoints, setDatapoints] = useState(0);
+  const [potentialValue, setPotentialValue] = useState(0);
+  const [enterprises, setEnterprises] = useState(0);
+
   useEffect(() => {
     if (messages.length > 0 && showWelcome) {
       const timer = setTimeout(() => {
@@ -124,6 +128,10 @@ const Chat = () => {
             new_message: message,
           }),
         });
+
+        // everytime a call is made update the datapoints, potential value but potential value should only increase in values between 0.01 and 0.1
+        setDatapoints(datapoints + 1);
+        setPotentialValue(potentialValue + Math.random() * 0.1);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -227,6 +235,9 @@ const Chat = () => {
               );
               addMessage(offer_text, "company", company);
               addMessage("Invite someone to join your ~wave:", "river");
+              // update the enterprises
+              setEnterprises(enterprises + 1);
+              setPotentialValue(potentialValue + randomNumber);
             }
           } catch (error) {
             console.error("Error parsing post-stream data:", error);
@@ -316,7 +327,11 @@ const Chat = () => {
       <AnimatePresence>{showSignUpForm && <SignUpForm />}</AnimatePresence>
       <div className="sticky top-0 left-0 right-0 bg-white z-10 flex justify-around pt-4 px-2 gap-2 items-center border-b-2 pb-4 border-primary-border">
         <img src="/logo.png" alt="Logo" className="w-5 h-5 mr-2" />
-        <TildeHeader />
+        <TildeHeader
+          datapoints={datapoints}
+          potentialValue={potentialValue}
+          enterprises={enterprises}
+        />
         <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
           <img
             src="/usa_flag.png"
