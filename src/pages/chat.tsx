@@ -137,7 +137,7 @@ const Chat = () => {
 
           if (isJsonResponse) {
             try {
-              // console.log("jsonResponse:", jsonResponse);
+              console.log("jsonResponse to be parsed", jsonResponse);
               const parsedJsonResponse = JSON.parse(jsonResponse);
               // console.log("Received JSON response:", parsedJsonResponse);
 
