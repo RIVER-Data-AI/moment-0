@@ -210,7 +210,7 @@ const Chat = () => {
       </AnimatePresence>
 
       <AnimatePresence>
-        {true && (
+        {showEndScreen && (
           <motion.div
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}

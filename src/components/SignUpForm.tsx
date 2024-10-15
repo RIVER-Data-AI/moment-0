@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaLock } from "react-icons/fa";
+import useChatStore from "@/stores/useChatStore";
 
 const SignUpForm = () => {
   const [name, setName] = useState("");
@@ -9,7 +10,7 @@ const SignUpForm = () => {
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [password, setPassword] = useState("");
-
+  const { setShowSignUpForm, setShowEndScreen } = useChatStore();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission logic here
@@ -136,7 +137,11 @@ const SignUpForm = () => {
             </div>
           </div>
           <button
-            type="submit"
+            // type="submit"
+            onClick={() => {
+              setShowSignUpForm(false);
+              setShowEndScreen(true);
+            }}
             className="w-full bg-gray-800 text-white py-3 rounded-lg font-semibold"
           >
             Sign up
