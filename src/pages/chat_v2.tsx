@@ -83,6 +83,8 @@ const Chat = () => {
   const [enterprises, setEnterprises] = useState(0);
   const [step, setStep] = useState(0);
 
+  console.log("step", step);
+
   useEffect(() => {
     if (messages.length > 0 && showWelcome) {
       const timer = setTimeout(() => {
@@ -270,7 +272,7 @@ const Chat = () => {
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {step === 1 && (
+        {(step === 1 || step === 2) && (
           <motion.div
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -299,9 +301,8 @@ const Chat = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
       <AnimatePresence>
-        {showEndScreen && (
+        {step === 4 && (
           <motion.div
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}

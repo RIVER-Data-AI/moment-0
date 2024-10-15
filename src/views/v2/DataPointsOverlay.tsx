@@ -4,6 +4,7 @@ import TildeHeaderV2 from "./TildeHeaderV2";
 import { ImCross } from "react-icons/im";
 import NotchedContainer from "@/components/NotchedContainer";
 import { IoMdLock } from "react-icons/io";
+import useChatStore from "@/stores/useChatStore";
 
 interface DataPointsOverlayProps {
   handleNextStep: () => void;
@@ -11,53 +12,53 @@ interface DataPointsOverlayProps {
   onClose: () => void;
 }
 
-const dataPoints = [
-  {
-    category: "First Name",
-    value: "Sebastian",
-    potentialValue: 1.2861850771200007,
-  },
-  {
-    category: "First Name",
-    value: "Sebastian",
-    potentialValue: 1.0588514069734056,
-  },
-  {
-    category: "Last Name",
-    value: "Escalante",
-    potentialValue: 1.18951015708548,
-  },
-  {
-    category: "Birth month",
-    value: "September",
-    potentialValue: 0.7658035528122109,
-  },
-  {
-    category: "Birth year",
-    value: "1999",
-    potentialValue: 0.6364679981366901,
-  },
-  {
-    category: "Birth day",
-    value: "20",
-    potentialValue: 0.6594276339133813,
-  },
-  {
-    category: "Age",
-    value: "25",
-    potentialValue: 1.0961143695878124,
-  },
-  {
-    category: "Star sign",
-    value: "Virgo",
-    potentialValue: 1.2060014328113182,
-  },
-  {
-    category: "Generation",
-    value: "Gen Z (Zoomer)",
-    potentialValue: 1.193401846641284,
-  },
-];
+// const dataPoints = [
+//   {
+//     category: "First Name",
+//     value: "Sebastian",
+//     potentialValue: 1.2861850771200007,
+//   },
+//   {
+//     category: "First Name",
+//     value: "Sebastian",
+//     potentialValue: 1.0588514069734056,
+//   },
+//   {
+//     category: "Last Name",
+//     value: "Escalante",
+//     potentialValue: 1.18951015708548,
+//   },
+//   {
+//     category: "Birth month",
+//     value: "September",
+//     potentialValue: 0.7658035528122109,
+//   },
+//   {
+//     category: "Birth year",
+//     value: "1999",
+//     potentialValue: 0.6364679981366901,
+//   },
+//   {
+//     category: "Birth day",
+//     value: "20",
+//     potentialValue: 0.6594276339133813,
+//   },
+//   {
+//     category: "Age",
+//     value: "25",
+//     potentialValue: 1.0961143695878124,
+//   },
+//   {
+//     category: "Star sign",
+//     value: "Virgo",
+//     potentialValue: 1.2060014328113182,
+//   },
+//   {
+//     category: "Generation",
+//     value: "Gen Z (Zoomer)",
+//     potentialValue: 1.193401846641284,
+//   },
+// ];
 
 interface SelectDataPointsProps {
   dataPoints: Array<{
@@ -159,9 +160,7 @@ const DataPointsOverlay: React.FC<DataPointsOverlayProps> = ({
   handleNextStep,
   step,
 }) => {
-  //   const { dataPoints } = useChatStore();
-
-  //   console.log("dataPoints", dataPoints);
+  const { dataPoints } = useChatStore();
 
   const [selectedDataPoints, setSelectedDataPoints] = useState<boolean[]>(
     new Array(dataPoints.length).fill(false)
@@ -249,7 +248,10 @@ const DataPointsOverlay: React.FC<DataPointsOverlayProps> = ({
                 <span className="text-xs">Total potential value</span>
               </div>
             </div>
-            <div className="w-full flex mt-2 justify-center items-center bg-river-black text-white py-2">
+            <div
+              onClick={handleNextStep}
+              className="w-full flex mt-2 justify-center items-center bg-river-black text-white py-2"
+            >
               <div className="flex items-center gap-2 justify-center">
                 <IoMdLock size={25} />
                 <span className="font-semibold text-lg">Sell</span>

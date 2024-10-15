@@ -51,7 +51,7 @@ const make_prompt = (
 ): { prompt: string; customAction: CustomAction | null } => {
   const RIVER_CONVERSATION_PROMPT = [
     `${input}. ${PROMPT_PREAMBLE} Tell me "First, what's your name?"`,
-    `${input}. ${PROMPT_PREAMBLE} Greet me and ask me my last name`,
+    `${input}. ${PROMPT_PREAMBLE} Tell me "Great! Waht's your last name?"`,
     `${input}. ${PROMPT_PREAMBLE} Ask me my date of birth`,
     `${input}. ${PROMPT_PREAMBLE} Tell me "Great. We'are almost done. What's your email?"`,
     `${input}. ${PROMPT_PREAMBLE} Now tell me "Create a password. It's 100% confidential and secure."`,
