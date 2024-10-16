@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import TildeInfo from "@/components/TildeInfo";
-import { useRouter } from "next/router";
 const pages = [
   {
     title: "Welcome to River",
@@ -84,11 +83,11 @@ const pages = [
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useState(0);
-  const router = useRouter();
   const handleNext = () => {
     if (currentPage === pages.length - 1) {
       // If it's the last page, navigate to the chat page
-      router.push("/task1");
+      //   router.push("/task1");
+      console.log("do nothing");
     } else {
       setCurrentPage((prev) => prev + 1);
     }
@@ -102,23 +101,23 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-between min-h-screen p-6 text-center">
-      {currentPage > 0 && (
-        <button
-          className="top-6 self-start left-6 text-black font-semibold py-2 rounded-md"
-          onClick={handleBack}
-        >
-          Back
-        </button>
-      )}
-      <main className="flex-1 w-full overflow-hidden">
-        <AnimatePresence mode="wait">
+      <button
+        className={`top-6 self-start left-6 text-black font-semibold py-2 rounded-md ${
+          currentPage === 0 ? "invisible" : ""
+        }`}
+        onClick={handleBack}
+      >
+        Back
+      </button>
+      <main className="flex-1 w-full overflow-hidden relative">
+        <AnimatePresence initial={false}>
           <motion.div
             key={currentPage}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            className="h-full flex flex-col justify-center"
+            transition={{ duration: 0.5 }}
+            className="absolute  top-0 left-0 w-full h-full flex flex-col justify-start mt-10"
           >
             <h1 className="text-3xl text-black font-bold mb-12">
               {pages[currentPage].title}
