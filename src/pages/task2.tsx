@@ -302,8 +302,8 @@ const Chat = () => {
 
   const handleNextStep = () => {
     setStep(step + 1);
+    console.log("step", step);
   };
-
   return (
     <div className="flex flex-col">
       <AnimatePresence>
@@ -320,7 +320,7 @@ const Chat = () => {
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {(step === 1 || step === 2) && (
+        {(step === 1 || step === 2 || step === 3) && (
           <motion.div
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -337,7 +337,7 @@ const Chat = () => {
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {step == 3 && (
+        {step == 4 && (
           <motion.div
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -350,7 +350,7 @@ const Chat = () => {
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {step === 4 && (
+        {step === 5 && (
           <motion.div
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}

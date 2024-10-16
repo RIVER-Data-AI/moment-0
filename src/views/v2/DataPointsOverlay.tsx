@@ -5,6 +5,7 @@ import { ImCross } from "react-icons/im";
 import NotchedContainer from "@/components/NotchedContainer";
 import { IoMdLock } from "react-icons/io";
 import useChatStore from "@/stores/useChatStore";
+import SellingDataScreen from "@/components/SellingDataScreen";
 
 interface DataPointsOverlayProps {
   handleNextStep: () => void;
@@ -139,7 +140,7 @@ const SelectDataPoints: React.FC<SelectDataPointsProps> = ({
           </div>
           <div className="flex w-full flex-col items-center justify-center border-2 border-gray-200 p-2">
             <span className="text-lg">
-              {selectedSummary.totalValue.toFixed(1)}
+              ${selectedSummary.totalValue.toFixed(1)}
             </span>
             <span className="text-xs">Total potential value</span>
           </div>
@@ -198,68 +199,80 @@ const DataPointsOverlay: React.FC<DataPointsOverlayProps> = ({
 
   return (
     <div className="fixed inset-0 bg-white z-40 flex flex-col p-2">
-      <div
-        onClick={onClose}
-        className="flex text-2xl justify-end p-3 items-center"
-      >
-        <ImCross size={15} />
-        <span className="font-semibold text-sm ml-2">Close</span>
-      </div>
-      <div className="flex justify-between items-center pb-4 gap-3">
-        <TildeHeaderV2
-          datapoints={dataPoints.length}
-          potentialValue={Number(totalPotentialValue)}
-          enterprises={0}
+      {step === 3 ? (
+        <SellingDataScreen
+          selectedSummary={selectedSummary}
+          handleNextStep={handleNextStep}
+          isMobile={false}
         />
-        <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
-          <img
-            src="/usa_flag.png"
-            alt="USA Flag"
-            className="w-12 h-12 object-cover"
-          />
-        </div>
-      </div>
-      <NotchedContainer className="max-w-md w-full relative bg-white rounded-lg border border-black flex flex-col overflow-y-auto">
-        {step === 1 && (
-          <SelectDataPoints
-            handleNextStep={handleNextStep}
-            dataPoints={dataPoints}
-            selectedDataPoints={selectedDataPoints}
-            selectAll={selectAll}
-            handleSelectAll={handleSelectAll}
-            handleDataPointSelect={handleDataPointSelect}
-            selectedSummary={selectedSummary}
-          />
-        )}
-        {step === 2 && (
-          <div>
-            <h2 className="text-2xl font-semibold p-2">2. Review and Sell</h2>
-            <div className="flex justify-between flex-col items-center gap-2">
-              <div className="flex items-center gap-2 border-2 border-gray-200 py-2 w-full flex-col">
-                <span className="text-2xl font-semibold">
-                  {selectedSummary.count}
-                </span>
-                <span className="text-xs">Data Points</span>
-              </div>
-              <div className="flex items-center gap-2 border-2 border-gray-200 py-2 w-full flex-col">
-                <span className="text-2xl font-semibold">
-                  {selectedSummary.totalValue.toFixed(1)}
-                </span>
-                <span className="text-xs">Total potential value</span>
-              </div>
-            </div>
-            <div
-              onClick={handleNextStep}
-              className="w-full flex mt-2 justify-center items-center bg-river-black text-white py-2"
-            >
-              <div className="flex items-center gap-2 justify-center">
-                <IoMdLock size={25} />
-                <span className="font-semibold text-lg">Sell</span>
-              </div>
+      ) : (
+        <>
+          <div
+            onClick={onClose}
+            className="flex text-2xl justify-end p-3 items-center"
+          >
+            <ImCross size={15} />
+            <span className="font-semibold text-sm ml-2">Close</span>
+          </div>
+          <div className="flex justify-between items-center pb-4 gap-3">
+            <TildeHeaderV2
+              datapoints={dataPoints.length}
+              potentialValue={Number(totalPotentialValue)}
+              enterprises={0}
+            />
+            <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
+              <img
+                src="/usa_flag.png"
+                alt="USA Flag"
+                className="w-12 h-12 object-cover"
+              />
             </div>
           </div>
-        )}
-      </NotchedContainer>
+          <NotchedContainer className="max-w-md w-full relative bg-white rounded-lg border border-black flex flex-col overflow-y-auto">
+            {step === 1 && (
+              <SelectDataPoints
+                handleNextStep={handleNextStep}
+                dataPoints={dataPoints}
+                selectedDataPoints={selectedDataPoints}
+                selectAll={selectAll}
+                handleSelectAll={handleSelectAll}
+                handleDataPointSelect={handleDataPointSelect}
+                selectedSummary={selectedSummary}
+              />
+            )}
+            {step === 2 && (
+              <div>
+                <h2 className="text-2xl font-semibold p-2">
+                  2. Review and Sell
+                </h2>
+                <div className="flex justify-between flex-col items-center gap-2">
+                  <div className="flex items-center gap-2 border-2 border-gray-200 py-2 w-full flex-col">
+                    <span className="text-2xl font-semibold">
+                      {selectedSummary.count}
+                    </span>
+                    <span className="text-xs">Data Points</span>
+                  </div>
+                  <div className="flex items-center gap-2 border-2 border-gray-200 py-2 w-full flex-col">
+                    <span className="text-2xl font-semibold">
+                      ${selectedSummary.totalValue.toFixed(1)} USD
+                    </span>
+                    <span className="text-xs">Total potential value</span>
+                  </div>
+                </div>
+                <div
+                  onClick={handleNextStep}
+                  className="w-full flex mt-2 justify-center items-center bg-river-black text-white py-2"
+                >
+                  <div className="flex items-center gap-2 justify-center">
+                    <IoMdLock size={25} />
+                    <span className="font-semibold text-lg">Sell</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </NotchedContainer>
+        </>
+      )}
     </div>
   );
 };
