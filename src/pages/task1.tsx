@@ -4,7 +4,6 @@ import ChatBubble from "@/components/ChatBubble";
 import { motion, AnimatePresence } from "framer-motion";
 import type { CustomAction } from "@/libs/types";
 
-// import DatePicker from "@/components/DatePicker";
 import useChatStore from "@/stores/useChatStore";
 import CustomActionButtons from "@/components/CustomActionButtons";
 import SignUpForm from "@/components/SignUpForm";
@@ -308,6 +307,22 @@ const Chat = () => {
   return (
     <div className="flex flex-col">
       <AnimatePresence>
+        {showEndScreen && (
+          <motion.div
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -50, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 bg-white h-screen w-screen flex justify-center items-center z-[9999]"
+          >
+            <div className="flex flex-col justify-center items-center text-river-black text-opacity-70">
+              <div className="text-4xl font-semibold">Account created.</div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
         {showSuccessMessage && (
           <motion.div
             initial={{ y: -50, opacity: 0 }}
@@ -320,21 +335,6 @@ const Chat = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
-      <AnimatePresence>
-        {showEndScreen && (
-          <motion.div
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -50, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed top-0 left-0 right-0 text-white mt-16 border-t-2 border-primary-border text-center z-50"
-          >
-            <EndScreen />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <AnimatePresence>
         {showShareOverlay && (
           <motion.div
