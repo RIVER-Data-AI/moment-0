@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoIosLock } from "react-icons/io";
-import Link from "next/link";
 import clsx from "clsx";
 import { MdLayers } from "react-icons/md";
 import { PiCurrencyDollarSimpleFill as CoinIcon } from "react-icons/pi";

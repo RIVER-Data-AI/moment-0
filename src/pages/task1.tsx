@@ -7,7 +7,6 @@ import type { CustomAction } from "@/libs/types";
 import useChatStore from "@/stores/useChatStore";
 import CustomActionButtons from "@/components/CustomActionButtons";
 import SignUpForm from "@/components/SignUpForm";
-import EndScreen from "@/components/EndScreen";
 
 function extractOfferDetails(
   jsonString: string
