@@ -88,7 +88,7 @@ export default function Home() {
   const handleNext = () => {
     if (currentPage === pages.length - 1) {
       // If it's the last page, navigate to the chat page
-      router.push("/chat_v2");
+      router.push("/task2");
     } else {
       setCurrentPage((prev) => prev + 1);
     }
