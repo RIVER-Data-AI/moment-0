@@ -88,15 +88,6 @@ const SignUpForm = () => {
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    value={day}
-                    onChange={(e) => setDay(e.target.value)}
-                    className="w-1/3 p-2 border-2 border-primary-border rounded-full text-black placeholder:italic"
-                    placeholder="DD"
-                    maxLength={2}
-                    required
-                  />
-                  <input
-                    type="text"
                     value={month}
                     onChange={(e) => setMonth(e.target.value)}
                     className="w-1/3 p-2 border-2 border-primary-border rounded-full text-black placeholder:italic"
@@ -104,6 +95,16 @@ const SignUpForm = () => {
                     maxLength={2}
                     required
                   />
+                  <input
+                    type="text"
+                    value={day}
+                    onChange={(e) => setDay(e.target.value)}
+                    className="w-1/3 p-2 border-2 border-primary-border rounded-full text-black placeholder:italic"
+                    placeholder="DD"
+                    maxLength={2}
+                    required
+                  />
+
                   <input
                     type="text"
                     value={year}
