@@ -23,7 +23,7 @@ const SignUpForm = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="fixed inset-0 bg-white text-river-black z-40 flex items-center justify-center mt-16 p-5 border-t-2 border-primary-border"
+      className="fixed inset-0 bg-white text-river-black z-40 flex items-center justify-center p-5 border-t-2 border-primary-border"
     >
       <div className="w-full max-w-md">
         <h1 className="text-2xl text-river-black text-opacity-70 font-semibold text-center mb-6">
