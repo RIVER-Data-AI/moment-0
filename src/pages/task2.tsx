@@ -1,4 +1,5 @@
 import React, { useEffect, useCallback, useState, useRef } from "react";
+import TildeHeader from "@/components/TildeHeader";
 import ChatBubble from "@/components/ChatBubble";
 import { motion, AnimatePresence } from "framer-motion";
 import type { CustomAction } from "@/libs/types";
@@ -12,7 +13,6 @@ import EndScreen from "@/components/EndScreen";
 import DataPointsOverlay from "@/views/v2/DataPointsOverlay";
 import DataSaleOverlay from "@/views/v2/DataSaleOverlay";
 import WelcomeToRiver from "@/views/v2/WelcomeToRiver";
-import StickyHeader from "@/components/StickyHeader";
 
 function extractOfferDetails(
   jsonString: string
@@ -404,15 +404,7 @@ const Chat = () => {
       </AnimatePresence>
 
       <AnimatePresence>{showSignUpForm && <SignUpForm />}</AnimatePresence>
-      <StickyHeader
-        datapoints={dataPoints.length}
-        potentialValue={dataPoints.reduce(
-          (sum, point) => sum + point.potentialValue,
-          0
-        )}
-        enterprises={enterprises}
-      />
-      {/* <div className="sticky top-0 left-0 right-0 bg-white z-10 flex justify-around pt-4 px-2 gap-2 items-center border-b-2 pb-4 border-primary-border">
+      <div className="sticky top-0 left-0 right-0 bg-white z-10 flex justify-around pt-4 px-2 gap-2 items-center border-b-2 pb-4 border-primary-border">
         <img src="/logo.png" alt="Logo" className="w-5 h-5 mr-2" />
         <TildeHeader
           datapoints={dataPoints.length}
@@ -429,7 +421,7 @@ const Chat = () => {
             className="w-12 h-12 object-cover"
           />
         </div>
-      </div> */}
+      </div>
       <AnimatePresence>
         {showWelcome && (
           <motion.div
@@ -438,7 +430,7 @@ const Chat = () => {
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
           >
-            <div className="text-center p-3 pt-[80px]">
+            <div className="text-center p-3">
               <div className="text-3xl text-black">
                 Try it. Wave to someone.
               </div>
@@ -454,16 +446,14 @@ const Chat = () => {
 
       <div
         ref={chatContainerRef}
-        className={`flex-grow overflow-y-auto p-3 
-          ${!showWelcome && "pt-[60px]"}
-          ${
-            customAction?.type === "wave" ||
-            customAction?.type === "share" ||
-            customAction?.type === "join" ||
-            customAction?.type === "password"
-              ? "pb-96"
-              : "pb-16"
-          }`}
+        className={`flex-grow overflow-y-auto p-3 ${
+          customAction?.type === "wave" ||
+          customAction?.type === "share" ||
+          customAction?.type === "join" ||
+          customAction?.type === "password"
+            ? "pb-96"
+            : "pb-16"
+        }`}
       >
         {messages.map((msg, index) => (
           <div
