@@ -47,6 +47,7 @@ const CustomActionButtons: React.FC<{
         initial="hidden"
         animate="visible"
         exit="exit"
+        className="px-2"
       >
         {(() => {
           switch (action.type) {

@@ -125,6 +125,7 @@ export default async function handler(
     );
     console.log("conversation_history", conversation_history);
     console.log("prompt", prompt);
+    console.log("customAction", customAction);
     try {
       const stream = openai.beta.chat.completions.stream({
         model: "gpt-4-turbo",

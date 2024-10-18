@@ -275,7 +275,7 @@ const Chat = () => {
   );
 
   return (
-    <div className="flex flex-col h-screen relative justify-between">
+    <div className="flex flex-col h-screen relative justify-end">
       <AnimatePresence>
         {showEndScreen && (
           <motion.div
@@ -291,7 +291,6 @@ const Chat = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
       <AnimatePresence>
         {showSuccessMessage && (
           <motion.div
@@ -308,8 +307,9 @@ const Chat = () => {
       <AnimatePresence>
         {showShareOverlay && (
           <motion.div
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -50, opacity: 0 }}
             transition={{ duration: 0.3 }}
             className="fixed inset-0 bg-white text-river-black z-40 flex items-center justify-center p-5 flex-col"
           >
@@ -344,24 +344,8 @@ const Chat = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
       <AnimatePresence>{showSignUpForm && <SignUpForm />}</AnimatePresence>
-      <div className="sticky top-0 left-0 pt-4 right-0 z-10 bg-white flex flex-col justify-around gap-2 items-center pb-4">
-        <div className="flex items-center gap-2 w-full border-b-2 border-primary-border pb-4 justify-center">
-          <img src="/logo.png" alt="Logo" className="w-5 h-5 mr-2" />
-          <TildeHeader
-            datapoints={datapoints}
-            potentialValue={potentialValue}
-            enterprises={enterprises}
-          />
-          <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
-            <img
-              src="/usa_flag.png"
-              alt="USA Flag"
-              className="w-12 h-12 object-cover"
-            />
-          </div>
-        </div>
+      <div className="absolute top-0 left-0 pt-20 right-0 z-10 bg-white flex flex-col justify-around gap-2 items-center pb-4">
         <AnimatePresence>
           {showWelcome && (
             <motion.div
@@ -384,35 +368,31 @@ const Chat = () => {
           )}
         </AnimatePresence>
       </div>
-      <div>
-        <div className="flex flex-col overflow-hidden">
-          <div className="flex-grow" />
-          <div
-            ref={chatContainerRef}
-            className={`overflow-y-auto p-3 ${
-              customAction?.type === "wave" ||
-              customAction?.type === "share" ||
-              customAction?.type === "join"
-                ? "pb-96"
-                : ""
-            }`}
-          >
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`flex ${
-                  msg.sender === "user" ? "justify-end" : "justify-start"
-                }`}
-              >
-                <ChatBubble
-                  message={msg.message}
-                  sender={msg.sender}
-                  companyName={msg?.companyName}
-                />
-              </div>
-            ))}
-            <div ref={bottomRef} />
-          </div>
+      <div className="flex flex-col overflow-hidden">
+        <div className="flex-grow" />
+        <div
+          ref={chatContainerRef}
+          className={`overflow-y-auto p-3 ${
+            customAction?.type === "wave" && "pb-48"
+          } 
+            ${customAction?.type === "share" && "pb-64"}
+            ${customAction?.type === "join" && "pb-56"}`}
+        >
+          {messages.map((msg, index) => (
+            <div
+              key={index}
+              className={`flex ${
+                msg.sender === "user" ? "justify-end" : "justify-start"
+              }`}
+            >
+              <ChatBubble
+                message={msg.message}
+                sender={msg.sender}
+                companyName={msg?.companyName}
+              />
+            </div>
+          ))}
+          <div ref={bottomRef} />
         </div>
         <AnimatePresence>
           {customAction && (
@@ -421,8 +401,23 @@ const Chat = () => {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed z-10 bottom-0 left-0 right-0 bg-white p-2 shadow-lg border-t-2 border-primary-border"
+              className="fixed z-10 bottom-0 left-0 right-0 bg-white shadow-lg border-t-2 border-primary-border"
             >
+              <div className="flex items-center gap-2 w-full py-4 justify-center border-b-2 border-primary-border">
+                <img src="/logo.png" alt="Logo" className="w-5 h-5 mr-2" />
+                <TildeHeader
+                  datapoints={datapoints}
+                  potentialValue={potentialValue}
+                  enterprises={enterprises}
+                />
+                <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
+                  <img
+                    src="/usa_flag.png"
+                    alt="USA Flag"
+                    className="w-12 h-12 object-cover"
+                  />
+                </div>
+              </div>
               <CustomActionButtons
                 action={customAction}
                 onSelect={(option) => {
@@ -433,7 +428,9 @@ const Chat = () => {
             </motion.div>
           )}
         </AnimatePresence>
-        <div className="sticky bottom-0 left-0 right-0 p-3 flex items-center gap-2 bg-white">
+      </div>
+      <div className="sticky bottom-0 left-0 right-0 flex flex-col items-center bg-white">
+        <div className="flex items-center py-4 gap-2 w-full justify-center px-2">
           <span className="text-3xl text-primary-border font-bold">~</span>
           <input
             type="text"
@@ -443,6 +440,34 @@ const Chat = () => {
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
           />
+        </div>
+        <div className="flex items-center gap-2 w-full py-4 justify-center border-t-2 border-primary-border">
+          <img src="/logo.png" alt="Logo" className="w-5 h-5 mr-2" />
+          <AnimatePresence>
+            <motion.div
+              initial={{ y: "-600px", opacity: 0.3 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 200,
+                damping: 30,
+                delay: 0.3,
+              }}
+            >
+              <TildeHeader
+                datapoints={datapoints}
+                potentialValue={potentialValue}
+                enterprises={enterprises}
+              />
+            </motion.div>
+          </AnimatePresence>
+          <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
+            <img
+              src="/usa_flag.png"
+              alt="USA Flag"
+              className="w-12 h-12 object-cover"
+            />
+          </div>
         </div>
       </div>
     </div>
