@@ -13,7 +13,7 @@ const openai = new OpenAI({
 });
 
 const prepareConversationHistory = (
-  conversation_history: ConversationItem[]
+  conversation_history: ConversationItem[],
 ) => {
   const conversationHistoryMessages: {
     role: "user" | "system" | "assistant";
@@ -36,7 +36,7 @@ const prepareConversationHistory = (
       {
         role: "assistant",
         content: assistantMessage?.message || "",
-      }
+      },
     );
   }
 
@@ -51,7 +51,7 @@ The following is a conversation with an AI assistant. The assistant is helpful, 
 
 const make_prompt = (
   input: string,
-  len_history: number
+  len_history: number,
 ): { prompt: string; customAction: CustomAction | null } => {
   const RIVER_CONVERSATION_PROMPT = [
     `${input}. ${PROMPT_PREAMBLE} Tell me "First, what's your name?"`,
@@ -94,21 +94,21 @@ const make_prompt = (
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method === "POST") {
     const { conversation_history: conversation, new_message } = req.body as {
       conversation_history: ConversationItem[];
       new_message: string;
     };
-    console.log("conversation in", conversation);
+    console.log("[chat_v2] conversation in", conversation);
     const conversation_history = prepareConversationHistory(conversation);
     const { prompt, customAction } = make_prompt(
       new_message,
-      conversation_history.length
+      conversation_history.length,
     );
-    console.log("conversation_history", conversation_history);
-    console.log("prompt", prompt);
+    console.log("[chat_v2] conversation_history", conversation_history);
+    console.log("[chat_v2] prompt", prompt);
     try {
       const stream = openai.beta.chat.completions.stream({
         model: "gpt-4-turbo",

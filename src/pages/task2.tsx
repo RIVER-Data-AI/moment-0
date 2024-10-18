@@ -206,7 +206,15 @@ const Chat = () => {
             potentialValue: Math.random() * 0.9 + 0.5, // Random value between 0.5 and 1
           }));
 
-          setDataPoints([...dataPoints, ...dataPointsWithPotentialValue]);
+          // only add data point that doesn't exist yet
+          const uniqueDataPoints = dataPointsWithPotentialValue.filter(
+            (newDataPoint) =>
+              !dataPoints.some(
+                (existingDataPoint) =>
+                  existingDataPoint.category === newDataPoint.category,
+              ),
+          );
+          setDataPoints([...dataPoints, ...uniqueDataPoints]);
         } catch (error) {
           console.error("Error parsing extract data:", error);
         }

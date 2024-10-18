@@ -12,7 +12,7 @@ const openai = new OpenAI({
 });
 
 const prepareConversationHistory = (
-  conversation_history: ConversationItem[]
+  conversation_history: ConversationItem[],
 ) => {
   const conversationHistoryMessages: {
     role: "user" | "system" | "assistant";
@@ -35,7 +35,7 @@ const prepareConversationHistory = (
       {
         role: "assistant",
         content: assistantMessage?.message || "",
-      }
+      },
     );
   }
 
@@ -91,7 +91,7 @@ if there is no information to extract, return an empty array.
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method === "POST") {
     const { conversation_history: conversation, new_message } = req.body as {
@@ -103,11 +103,14 @@ export default async function handler(
       res.status(200).json({ data: [] });
       return;
     }
-
+    // get the last message send by the assistant
     const assistant_message =
-      conversation_history[conversation_history.length - 1].content;
+      conversation_history[conversation_history.length - 2].content;
 
-    console.log("analysing message", { assistant_message, new_message });
+    console.log("[extract] analysing message", {
+      assistant_message,
+      new_message,
+    });
     try {
       const chatCompletion = await openai.chat.completions.create({
         model: "gpt-4o",
@@ -128,8 +131,8 @@ export default async function handler(
         max_tokens: 1000,
       });
 
-      console.log("chatCompletion", chatCompletion);
-      console.log("answer", chatCompletion.choices[0].message);
+      console.log("[extract] chatCompletion", chatCompletion);
+      console.log("[extract] answer", chatCompletion.choices[0].message);
 
       res.status(200).json({ data: chatCompletion.choices[0].message.content });
     } catch (error) {
