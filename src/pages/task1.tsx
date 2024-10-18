@@ -484,14 +484,16 @@ const Chat = () => {
           <div className="sticky bottom-0 left-0 right-0 flex flex-col items-center bg-white">
             <div className="flex w-full items-center justify-center gap-2 px-2 py-4">
               <span className="text-3xl font-bold text-primary-border">~</span>
-              <input
-                type="text"
-                placeholder="Reply..."
-                className="w-full rounded-full border-2 border-primary-border p-2 text-black placeholder:text-sm placeholder:italic placeholder:text-[#2D3648] placeholder:text-opacity-70"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-              />
+              {customAction?.type !== "wave" && (
+                <input
+                  type="text"
+                  placeholder="Reply..."
+                  className="w-full rounded-full border-2 border-primary-border p-2 text-black placeholder:text-sm placeholder:italic placeholder:text-[#2D3648] placeholder:text-opacity-70"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+                />
+              )}
             </div>
             <div className="flex w-full items-center justify-center gap-2 border-t-2 border-primary-border py-4">
               <img src="/logo.png" alt="Logo" className="mr-2 h-5 w-5" />
