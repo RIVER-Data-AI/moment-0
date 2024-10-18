@@ -399,15 +399,15 @@ const Chat = () => {
             )}
           </AnimatePresence>
           <AnimatePresence>{showSignUpForm && <SignUpForm />}</AnimatePresence>
-          <div className="absolute left-0 right-0 top-0 z-10 flex flex-col items-center justify-around gap-2 bg-white pb-4 pt-20">
-            <AnimatePresence>
-              {showWelcome && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.5, ease: "easeInOut" }}
-                >
+          <AnimatePresence>
+            {showWelcome && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+              >
+                <div className="absolute left-0 right-0 top-0 z-10 flex flex-col items-center justify-around gap-2 bg-white pb-4 pt-20">
                   <div className="p-3 text-center">
                     <div className="text-3xl text-black">
                       Try it. Wave to someone.
@@ -418,10 +418,10 @@ const Chat = () => {
                       without your express permission. It&apos;s your data!
                     </div>
                   </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
           <div className="flex flex-col overflow-hidden">
             <div className="flex-grow" />
             <div
@@ -493,7 +493,7 @@ const Chat = () => {
                 onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
               />
             </div>
-            <div className="flex w-full items-center justify-center gap-2 border-t-2 border-primary-border py-4">
+            <div className="flex w-full items-center justify-center gap-2 border-t-2 border-primary-border bg-red-400 py-4">
               <img src="/logo.png" alt="Logo" className="mr-2 h-5 w-5" />
               <AnimatePresence>
                 <motion.div
