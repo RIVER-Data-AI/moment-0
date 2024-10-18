@@ -231,35 +231,6 @@ const Chat = () => {
             }
           }
 
-          // if (isJsonResponse) {
-          //   try {
-          //     console.log("jsonResponse to be parsed", jsonResponse);
-          //     const parsedJsonResponse = JSON.parse(jsonResponse);
-          //     // console.log("Received JSON response:", parsedJsonResponse);
-
-          //     // Format the JSON response
-          //     const formattedResponse = {
-          //       company: parsedJsonResponse.company || "",
-          //       offer_text: parsedJsonResponse.offer_text || "",
-          //     };
-
-          //     // Generate messages for different types
-          //     const eventMessage = `${formattedResponse.company} has paid to jump on your ~wave.`;
-          //     const companyMessage = formattedResponse.offer_text;
-          //     const riverMessage = `Invite someone to join your ~wave:`;
-
-          //     // console.log(eventMessage, companyMessage, riverMessage);
-          //     // Add messages to the chat
-          //     addMessage(eventMessage, "event", formattedResponse.company);
-          //     addMessage(companyMessage, "company", formattedResponse.company);
-          //     addMessage(riverMessage, "river");
-
-          //     scrollToBottom();
-          //   } catch (error) {
-          //     console.error("Error parsing JSON response:", error);
-          //   }
-          // }
-
           if (aiResponse) updateLatestMessage(aiResponse, messageIndex);
           scrollToBottom();
         }
@@ -304,7 +275,7 @@ const Chat = () => {
   );
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-screen relative justify-between">
       <AnimatePresence>
         {showEndScreen && (
           <motion.div
@@ -375,98 +346,104 @@ const Chat = () => {
       </AnimatePresence>
 
       <AnimatePresence>{showSignUpForm && <SignUpForm />}</AnimatePresence>
-      <div className="sticky top-0 left-0 right-0 bg-white z-10 flex justify-around pt-4 px-2 gap-2 items-center border-b-2 pb-4 border-primary-border">
-        <img src="/logo.png" alt="Logo" className="w-5 h-5 mr-2" />
-        <TildeHeader
-          datapoints={datapoints}
-          potentialValue={potentialValue}
-          enterprises={enterprises}
-        />
-        <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
-          <img
-            src="/usa_flag.png"
-            alt="USA Flag"
-            className="w-12 h-12 object-cover"
+      <div className="sticky top-0 left-0 pt-4 right-0 z-10 bg-white flex flex-col justify-around gap-2 items-center pb-4">
+        <div className="flex items-center gap-2 w-full border-b-2 border-primary-border pb-4 justify-center">
+          <img src="/logo.png" alt="Logo" className="w-5 h-5 mr-2" />
+          <TildeHeader
+            datapoints={datapoints}
+            potentialValue={potentialValue}
+            enterprises={enterprises}
           />
-        </div>
-      </div>
-      <AnimatePresence>
-        {showWelcome && (
-          <motion.div
-            initial={{ opacity: 1, height: "auto" }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
-          >
-            <div className="text-center p-3">
-              <div className="text-3xl text-black">
-                Try it. Wave to someone.
-              </div>
-              <div className="text-black">
-                And remember, on RIVER, your data is always 100% in your
-                control. None of your data gets seen, shared, or sold without
-                your express permission. It&apos;s your data!
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <div
-        ref={chatContainerRef}
-        className={`flex-grow overflow-y-auto p-3 ${
-          customAction?.type === "wave" ||
-          customAction?.type === "share" ||
-          customAction?.type === "join"
-            ? "pb-96"
-            : "pb-16"
-        }`}
-      >
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`flex ${
-              msg.sender === "user" ? "justify-end" : "justify-start"
-            }`}
-          >
-            <ChatBubble
-              message={msg.message}
-              sender={msg.sender}
-              companyName={msg?.companyName}
+          <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
+            <img
+              src="/usa_flag.png"
+              alt="USA Flag"
+              className="w-12 h-12 object-cover"
             />
           </div>
-        ))}
-        <div ref={bottomRef} />
+        </div>
+        <AnimatePresence>
+          {showWelcome && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+            >
+              <div className="text-center p-3">
+                <div className="text-3xl text-black">
+                  Try it. Wave to someone.
+                </div>
+                <div className="text-black">
+                  And remember, on RIVER, your data is always 100% in your
+                  control. None of your data gets seen, shared, or sold without
+                  your express permission. It&apos;s your data!
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-      <AnimatePresence>
-        {customAction && (
-          <motion.div
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed z-10 bottom-0 left-0 right-0 bg-white p-2 shadow-lg border-t-2 border-primary-border"
+      <div>
+        <div className="flex flex-col overflow-hidden">
+          <div className="flex-grow" />
+          <div
+            ref={chatContainerRef}
+            className={`overflow-y-auto p-3 ${
+              customAction?.type === "wave" ||
+              customAction?.type === "share" ||
+              customAction?.type === "join"
+                ? "pb-96"
+                : ""
+            }`}
           >
-            <CustomActionButtons
-              action={customAction}
-              onSelect={(option) => {
-                handleSendMessage(option);
-                setCustomAction(null);
-              }}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <div className="fixed bottom-0 left-0 right-0 bg-white p-3 flex items-center gap-2">
-        <span className="text-3xl text-primary-border font-bold">~</span>
-        <input
-          type="text"
-          placeholder="Reply..."
-          className="w-full p-2 border-2 border-primary-border rounded-full text-black placeholder:italic placeholder:text-opacity-70 placeholder:text-[#2D3648] placeholder:text-sm"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-        />
+            {messages.map((msg, index) => (
+              <div
+                key={index}
+                className={`flex ${
+                  msg.sender === "user" ? "justify-end" : "justify-start"
+                }`}
+              >
+                <ChatBubble
+                  message={msg.message}
+                  sender={msg.sender}
+                  companyName={msg?.companyName}
+                />
+              </div>
+            ))}
+            <div ref={bottomRef} />
+          </div>
+        </div>
+        <AnimatePresence>
+          {customAction && (
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="fixed z-10 bottom-0 left-0 right-0 bg-white p-2 shadow-lg border-t-2 border-primary-border"
+            >
+              <CustomActionButtons
+                action={customAction}
+                onSelect={(option) => {
+                  handleSendMessage(option);
+                  setCustomAction(null);
+                }}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <div className="sticky bottom-0 left-0 right-0 p-3 flex items-center gap-2 bg-white">
+          <span className="text-3xl text-primary-border font-bold">~</span>
+          <input
+            type="text"
+            placeholder="Reply..."
+            className="w-full p-2 border-2 border-primary-border rounded-full text-black placeholder:italic placeholder:text-opacity-70 placeholder:text-[#2D3648] placeholder:text-sm"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+          />
+        </div>
       </div>
     </div>
   );
