@@ -9,7 +9,7 @@ import type { DataPoint } from "@/stores/useChatStore";
 import useChatStore from "@/stores/useChatStore";
 import CustomActionButtons from "@/components/CustomActionButtons";
 import SignUpForm from "@/components/SignUpForm";
-import EndScreen from "@/components/EndScreen";
+// import EndScreen from "@/components/EndScreen";
 import DataPointsOverlay from "@/views/v2/DataPointsOverlay";
 import DataSaleOverlay from "@/views/v2/DataSaleOverlay";
 import WelcomeToRiver from "@/views/v2/WelcomeToRiver";
