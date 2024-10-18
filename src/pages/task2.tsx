@@ -467,15 +467,15 @@ const Chat = () => {
           </AnimatePresence>
 
           <AnimatePresence>{showSignUpForm && <SignUpForm />}</AnimatePresence>
-          <AnimatePresence>
-            {showWelcome && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-              >
-                <div className="absolute left-0 right-0 top-0 z-10 flex flex-col items-center justify-around gap-2 bg-white pb-4 pt-20">
+          <div className="absolute left-0 right-0 top-0 z-10 flex flex-col items-center justify-around gap-2 bg-white pb-4 pt-20">
+            <AnimatePresence>
+              {showWelcome && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.5, ease: "easeInOut" }}
+                >
                   <div className="p-3 text-center">
                     <div className="text-3xl text-black">
                       Try it. Wave to someone.
@@ -486,10 +486,10 @@ const Chat = () => {
                       without your express permission. It&apos;s your data!
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
           <div className="flex flex-col overflow-hidden">
             <div className="flex-grow" />
             <div
