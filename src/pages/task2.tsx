@@ -324,16 +324,14 @@ const Chat = () => {
       {currentPage === 0 && (
         <div className="flex min-h-screen flex-col items-center justify-between p-6 text-center">
           <button
-            className={`left-6 top-6 self-start rounded-md py-2 font-semibold text-black ${
-              currentPage === 0 ? "invisible" : ""
-            }`}
+            className={`left-6 top-6 self-start rounded-md py-2 font-semibold text-black`}
             onClick={() => {}}
           >
             Back
           </button>
           <main className="relative w-full flex-1 overflow-hidden">
-            <div className="absolute left-0 top-0 mt-10 flex h-full w-full flex-col justify-start">
-              <h1 className="mb-12 text-3xl font-bold text-black">
+            <div className="absolute left-0 top-0 flex h-full w-full flex-col justify-start">
+              <h1 className="mb-6 text-3xl font-bold text-black">
                 When you wave, you will always see this
               </h1>
               <div className="mb-12 whitespace-pre-line text-lg text-black text-opacity-60">

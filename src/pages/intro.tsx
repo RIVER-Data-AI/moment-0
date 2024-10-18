@@ -5,7 +5,7 @@ const pages = [
   {
     title: "Welcome to River",
     content: () => (
-      <p className="text-2xl mb-12 text-black text-opacity-60">
+      <p className="mb-12 text-2xl text-black text-opacity-60">
         On RIVER, everything is a{" "}
         <span className="font-extrabold italic">~wave</span>.
       </p>
@@ -14,7 +14,7 @@ const pages = [
   {
     title: "When you ~wave",
     content: () => (
-      <p className="text-2xl mb-12 text-black text-opacity-60">
+      <p className="mb-12 text-2xl text-black text-opacity-60">
         To a friend, to a group, to search, to shop...the{" "}
         <span className="font-bold italic">data</span> you create is 100% in
         your control.
@@ -24,10 +24,10 @@ const pages = [
   {
     title: "Keep your data private",
     content: () => (
-      <div className="text-2xl mb-12  text-black text-opacity-60">
+      <div className="mb-12 text-2xl text-black text-opacity-60">
         <p className="font-extrabold italic">You control</p>
         <br />
-        <ul className="list-disc list-inside">
+        <ul className="list-inside list-disc">
           <li>who sees it</li>
           <li>who has access to it</li>
           <li>where they see it</li>
@@ -39,7 +39,7 @@ const pages = [
   {
     title: "Sell your data",
     content: () => (
-      <div className="text-2xl mb-12 text-black text-opacity-60">
+      <div className="mb-12 text-2xl text-black text-opacity-60">
         <p>
           If you want, <br />
           <span className="font-extrabold italic">Sell it real-time</span> to
@@ -52,7 +52,7 @@ const pages = [
     title: "When you wave, you will always see this",
     content: () => (
       <>
-        <img src="/tilde.png" alt="Tilde" className="w-20 h-20 mx-auto my-4" />
+        <img src="/tilde.png" alt="Tilde" className="mx-auto my-4 h-20 w-20" />
         {/* <p className="text-2xl font-medium mb-12 text-black text-opacity-60">
           Click on this at any time to see what&apos;s happening with your data.
         </p> */}
@@ -100,16 +100,16 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-between min-h-screen p-6 text-center">
+    <div className="flex min-h-screen flex-col items-center justify-between p-6 text-center">
       <button
-        className={`top-6 self-start left-6 text-black font-semibold py-2 rounded-md ${
+        className={`left-6 top-6 self-start rounded-md py-2 font-semibold text-black ${
           currentPage === 0 ? "invisible" : ""
         }`}
         onClick={handleBack}
       >
         Back
       </button>
-      <main className="flex-1 w-full overflow-hidden relative">
+      <main className="relative w-full flex-1 overflow-hidden">
         <AnimatePresence initial={false}>
           <motion.div
             key={currentPage}
@@ -117,25 +117,25 @@ export default function Home() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="absolute  top-0 left-0 w-full h-full flex flex-col justify-start mt-10"
+            className="absolute left-0 top-0 flex h-full w-full flex-col justify-start"
           >
-            <h1 className="text-3xl text-black font-bold mb-12">
+            <h1 className="mb-6 text-3xl font-bold text-black">
               {pages[currentPage].title}
             </h1>
-            <div className="text-lg mb-12 text-black text-opacity-60 whitespace-pre-line">
+            <div className="mb-12 whitespace-pre-line text-lg text-black text-opacity-60">
               {pages[currentPage].content()}
             </div>
           </motion.div>
         </AnimatePresence>
       </main>
-      <div className="w-full fixed bottom-0 left-0 p-6 ">
+      <div className="fixed bottom-0 left-0 w-full p-6">
         <button
-          className="bg-main-action text-white font-semibold py-3 px-6 rounded-md w-full flex items-center justify-center"
+          className="flex w-full items-center justify-center rounded-md bg-main-action px-6 py-3 font-semibold text-white"
           onClick={handleNext}
         >
           <span>Next</span>
           <svg
-            className="w-4 h-4 ml-2"
+            className="ml-2 h-4 w-4"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
