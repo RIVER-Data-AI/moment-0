@@ -399,7 +399,7 @@ const Chat = () => {
             )}
           </AnimatePresence>
           <AnimatePresence>{showSignUpForm && <SignUpForm />}</AnimatePresence>
-          <div className="absolute left-0 right-0 top-0 z-10 flex flex-col items-center justify-around gap-2 bg-white pb-4 pt-20">
+          <div className="z-10 flex flex-col items-center justify-around gap-2 place-self-end pb-4 pt-20">
             <AnimatePresence>
               {showWelcome && (
                 <motion.div
