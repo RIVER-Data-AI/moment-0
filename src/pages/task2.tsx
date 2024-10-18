@@ -13,9 +13,10 @@ import EndScreen from "@/components/EndScreen";
 import DataPointsOverlay from "@/views/v2/DataPointsOverlay";
 import DataSaleOverlay from "@/views/v2/DataSaleOverlay";
 import WelcomeToRiver from "@/views/v2/WelcomeToRiver";
+import TildeInfo from "@/components/TildeInfo";
 
 function extractOfferDetails(
-  jsonString: string
+  jsonString: string,
 ): { company: string; offer_text: string } | null {
   try {
     // Parse the entire JSON string
@@ -81,6 +82,7 @@ const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [enterprises, setEnterprises] = useState(0);
   const [step, setStep] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
 
   // call the chat api on component mount
   useEffect(() => {
@@ -115,7 +117,7 @@ const Chat = () => {
           if (endStreamIndex !== -1) {
             aiResponse = aiResponse.slice(
               0,
-              aiResponse.length - (chunk.length - endStreamIndex)
+              aiResponse.length - (chunk.length - endStreamIndex),
             );
             break;
           }
@@ -278,7 +280,7 @@ const Chat = () => {
               addMessage(
                 `${company} has paid to jump on your ~wave.`,
                 "event",
-                company
+                company,
               );
               addMessage(offer_text, "company", company);
               addMessage("Invite someone to join your ~wave:", "river");
@@ -293,222 +295,308 @@ const Chat = () => {
         console.error("Error in chat stream:", error);
         updateLatestMessage(
           "Sorry, an error occurred while processing your request.",
-          messageIndex
+          messageIndex,
         );
       }
     },
-    [inputValue, messages, addMessage, updateLatestMessage, scrollToBottom]
+    [inputValue, messages, addMessage, updateLatestMessage, scrollToBottom],
   );
 
   const handleNextStep = () => {
     setStep(step + 1);
     console.log("step", step);
   };
-  return (
-    <div className="flex flex-col h-screen relative justify-between">
-      <AnimatePresence>
-        {showOverlayFlow2 && step == 0 && (
-          <motion.div
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -50, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-white z-50 text-river-black"
-          >
-            <WelcomeToRiver handleNextStep={handleNextStep} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <AnimatePresence>
-        {(step === 1 || step === 2 || step === 3) && (
-          <motion.div
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -50, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-white z-50 text-river-black"
-          >
-            <DataPointsOverlay
-              onClose={() => {}}
-              handleNextStep={handleNextStep}
-              step={step}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <AnimatePresence>
-        {step == 4 && (
-          <motion.div
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -50, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-white z-50 text-river-black"
-          >
-            <DataSaleOverlay handleNextStep={handleNextStep} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <AnimatePresence>
-        {step === 5 && (
-          <motion.div
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -50, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed top-0 left-0 right-0 text-white mt-16 border-t-2 border-primary-border text-center z-50"
-          >
-            <EndScreen />
-          </motion.div>
-        )}
-      </AnimatePresence>
 
-      <AnimatePresence>
-        {showShareOverlay && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-white text-river-black z-40 flex items-center justify-center p-5 flex-col"
+  const handleNextPage = () => {
+    setCurrentPage((prev) => prev + 1);
+  };
+
+  return (
+    <>
+      {currentPage === 0 && (
+        <div className="flex min-h-screen flex-col items-center justify-between p-6 text-center">
+          <button
+            className={`left-6 top-6 self-start rounded-md py-2 font-semibold text-black ${
+              currentPage === 0 ? "invisible" : ""
+            }`}
+            onClick={() => {}}
           >
-            <div className="p-6 w-full h-full flex flex-col justify-between bg-[#EDF0F7] rounded-lg">
-              <div className="text-start flex-grow flex flex-col justify-center p-2">
-                <div className="flex text-2xl mb-4 justify-center">
-                  <img src="/logo.png" alt="Logo" className="w-10 h-10" />
-                </div>
-                <p className="text-2xl mb-2">
-                  I&apos;ve just created a ~wave on the new RIVER app
-                </p>
-                <p className="text-2xl font-semibold mb-4">
-                  and earned ${randomNumber} from a tiny amount of my data.
-                </p>
-                <p className="text-2xl mb-2">
-                  Imagine how much we can{" "}
-                  <span className="font-semibold">earn together</span> by just
-                  chatting like we normally do.
-                </p>
-                <p className="text-2xl">
-                  On RIVER our data is{" "}
-                  <span className="font-semibold">100% in our control.</span>
-                </p>
+            Back
+          </button>
+          <main className="relative w-full flex-1 overflow-hidden">
+            <div className="absolute left-0 top-0 mt-10 flex h-full w-full flex-col justify-start">
+              <h1 className="mb-12 text-3xl font-bold text-black">
+                When you wave, you will always see this
+              </h1>
+              <div className="mb-12 whitespace-pre-line text-lg text-black text-opacity-60">
+                <TildeInfo highlightAll />
               </div>
             </div>
+          </main>
+          <div className="fixed bottom-0 left-0 w-full p-6">
             <button
-              className="w-full bg-gray-800 text-white py-3 rounded-lg mt-4 font-semibold"
-              onClick={handleShare}
+              className="flex w-full items-center justify-center rounded-md bg-main-action px-6 py-3 font-semibold text-white"
+              onClick={handleNextPage}
             >
-              Share
+              <span>Next</span>
+              <svg
+                className="ml-2 h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
             </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>{showSignUpForm && <SignUpForm />}</AnimatePresence>
-      <div className="sticky top-0 pt-4 left-0 right-0 z-10 bg-white flex flex-col justify-around gap-2 items-center pb-4">
-        <div className="flex items-center gap-2 w-full border-b-2 border-primary-border pb-4 justify-center">
-          <img src="/logo.png" alt="Logo" className="w-5 h-5 mr-2" />
-          <TildeHeader
-            datapoints={dataPoints.length}
-            potentialValue={dataPoints.reduce(
-              (acc, curr) => acc + curr.potentialValue,
-              0
-            )}
-            enterprises={enterprises}
-          />
-          <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
-            <img
-              src="/usa_flag.png"
-              alt="USA Flag"
-              className="w-12 h-12 object-cover"
-            />
           </div>
         </div>
-        <AnimatePresence>
-          {showWelcome && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-            >
-              <div className="text-center p-3">
-                <div className="text-3xl text-black">
-                  Try it. Wave to someone.
-                </div>
-                <div className="text-black">
-                  And remember, on RIVER, your data is always 100% in your
-                  control. None of your data gets seen, shared, or sold without
-                  your express permission. It&apos;s your data!
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-      <div>
-        <div className="flex flex-col overflow-hidden">
-          <div className="flex-grow" />
-          <div
-            ref={chatContainerRef}
-            className={`overflow-y-auto p-3 ${
-              customAction?.type === "wave" ||
-              customAction?.type === "share" ||
-              customAction?.type === "join" ||
-              customAction?.type === "birthdate" ||
-              customAction?.type === "password"
-                ? "pb-24"
-                : ""
-            }`}
-          >
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`flex ${
-                  msg.sender === "user" ? "justify-end" : "justify-start"
-                }`}
+      )}
+      {currentPage === 1 && (
+        <div className="relative flex h-screen flex-col justify-end">
+          <AnimatePresence>
+            {showOverlayFlow2 && step == 0 && (
+              <motion.div
+                initial={{ y: -50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -50, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="fixed inset-0 z-50 bg-white text-river-black"
               >
-                <ChatBubble
-                  message={msg.message}
-                  sender={msg.sender}
-                  companyName={msg?.companyName}
+                <WelcomeToRiver handleNextStep={handleNextStep} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <AnimatePresence>
+            {(step === 1 || step === 2 || step === 3) && (
+              <motion.div
+                initial={{ y: -50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -50, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="fixed inset-0 z-50 bg-white text-river-black"
+              >
+                <DataPointsOverlay
+                  onClose={() => {}}
+                  handleNextStep={handleNextStep}
+                  step={step}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <AnimatePresence>
+            {step == 4 && (
+              <motion.div
+                initial={{ y: -50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -50, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="fixed inset-0 z-50 bg-white text-river-black"
+              >
+                <DataSaleOverlay handleNextStep={handleNextStep} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <AnimatePresence>
+            {step === 5 && (
+              <motion.div
+                initial={{ y: -50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -50, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="fixed left-0 right-0 top-0 z-50 mt-16 border-t-2 border-primary-border text-center text-white"
+              >
+                <EndScreen />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {showShareOverlay && (
+              <motion.div
+                initial={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-white p-5 text-river-black"
+              >
+                <div className="flex h-full w-full flex-col justify-between rounded-lg bg-[#EDF0F7] p-6">
+                  <div className="flex flex-grow flex-col justify-center p-2 text-start">
+                    <div className="mb-4 flex justify-center text-2xl">
+                      <img src="/logo.png" alt="Logo" className="h-10 w-10" />
+                    </div>
+                    <p className="mb-2 text-2xl">
+                      I&apos;ve just created a ~wave on the new RIVER app
+                    </p>
+                    <p className="mb-4 text-2xl font-semibold">
+                      and earned ${randomNumber} from a tiny amount of my data.
+                    </p>
+                    <p className="mb-2 text-2xl">
+                      Imagine how much we can{" "}
+                      <span className="font-semibold">earn together</span> by
+                      just chatting like we normally do.
+                    </p>
+                    <p className="text-2xl">
+                      On RIVER our data is{" "}
+                      <span className="font-semibold">
+                        100% in our control.
+                      </span>
+                    </p>
+                  </div>
+                </div>
+                <button
+                  className="mt-4 w-full rounded-lg bg-gray-800 py-3 font-semibold text-white"
+                  onClick={handleShare}
+                >
+                  Share
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>{showSignUpForm && <SignUpForm />}</AnimatePresence>
+          <div className="absolute left-0 right-0 top-0 z-10 flex flex-col items-center justify-around gap-2 bg-white pb-4 pt-20">
+            <AnimatePresence>
+              {showWelcome && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.5, ease: "easeInOut" }}
+                >
+                  <div className="p-3 text-center">
+                    <div className="text-3xl text-black">
+                      Try it. Wave to someone.
+                    </div>
+                    <div className="text-black">
+                      And remember, on RIVER, your data is always 100% in your
+                      control. None of your data gets seen, shared, or sold
+                      without your express permission. It&apos;s your data!
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          <div className="flex flex-col overflow-hidden">
+            <div className="flex-grow" />
+            <div
+              ref={chatContainerRef}
+              className={`overflow-y-auto p-3 ${
+                customAction?.type === "wave" ||
+                customAction?.type === "share" ||
+                customAction?.type === "join" ||
+                customAction?.type === "birthdate" ||
+                customAction?.type === "password"
+                  ? "pb-24"
+                  : ""
+              }`}
+            >
+              {messages.map((msg, index) => (
+                <div
+                  key={index}
+                  className={`flex ${
+                    msg.sender === "user" ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  <ChatBubble
+                    message={msg.message}
+                    sender={msg.sender}
+                    companyName={msg?.companyName}
+                  />
+                </div>
+              ))}
+              <div ref={bottomRef} />
+            </div>
+            <AnimatePresence>
+              {customAction && (
+                <motion.div
+                  initial={{ y: "100%" }}
+                  animate={{ y: 0 }}
+                  exit={{ y: "100%" }}
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  className="fixed bottom-0 left-0 right-0 z-10 border-t-2 border-primary-border bg-white shadow-lg"
+                >
+                  <div className="flex w-full items-center justify-center gap-2 border-b-2 border-primary-border py-4">
+                    <img src="/logo.png" alt="Logo" className="mr-2 h-5 w-5" />
+                    <TildeHeader
+                      datapoints={dataPoints.length}
+                      potentialValue={dataPoints.reduce(
+                        (acc, curr) => acc + curr.potentialValue,
+                        0,
+                      )}
+                      enterprises={enterprises}
+                    />
+                    <div className="flex h-6 w-6 items-center justify-center overflow-hidden rounded-full">
+                      <img
+                        src="/usa_flag.png"
+                        alt="USA Flag"
+                        className="h-12 w-12 object-cover"
+                      />
+                    </div>
+                  </div>
+                  <CustomActionButtons
+                    action={customAction}
+                    onSelect={(option) => {
+                      handleSendMessage(option);
+                      setCustomAction(null);
+                    }}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          <div className="sticky bottom-0 left-0 right-0 flex flex-col items-center bg-white">
+            <div className="flex w-full items-center justify-center gap-2 px-2 py-4">
+              <span className="text-3xl font-bold text-primary-border">~</span>
+              <input
+                type="text"
+                placeholder="Reply..."
+                className="w-full rounded-full border-2 border-primary-border p-2 text-black placeholder:text-sm placeholder:italic placeholder:text-[#2D3648] placeholder:text-opacity-70"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+              />
+            </div>
+            <div className="flex w-full items-center justify-center gap-2 border-t-2 border-primary-border py-4">
+              <img src="/logo.png" alt="Logo" className="mr-2 h-5 w-5" />
+              <AnimatePresence>
+                <motion.div
+                  initial={{ y: "-500px", opacity: 0.3 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 200,
+                    damping: 30,
+                    delay: 0.3,
+                  }}
+                >
+                  <TildeHeader
+                    datapoints={dataPoints.length}
+                    potentialValue={dataPoints.reduce(
+                      (acc, curr) => acc + curr.potentialValue,
+                      0,
+                    )}
+                    enterprises={enterprises}
+                  />
+                </motion.div>
+              </AnimatePresence>
+              <div className="flex h-6 w-6 items-center justify-center overflow-hidden rounded-full">
+                <img
+                  src="/usa_flag.png"
+                  alt="USA Flag"
+                  className="h-12 w-12 object-cover"
                 />
               </div>
-            ))}
-            <div ref={bottomRef} />
+            </div>
           </div>
         </div>
-        <AnimatePresence>
-          {customAction && (
-            <motion.div
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed z-10 bottom-0 left-0 right-0 bg-white p-2 shadow-lg border-t-2 border-primary-border"
-            >
-              <CustomActionButtons
-                action={customAction}
-                onSelect={(option) => {
-                  handleSendMessage(option);
-                  setCustomAction(null);
-                }}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <div className="sticky bottom-0 left-0 right-0 p-3 flex items-center gap-2 bg-white">
-          <span className="text-3xl text-primary-border font-bold">~</span>
-          <input
-            type="text"
-            placeholder="Reply..."
-            className="w-full p-2 border-2 border-primary-border rounded-full text-black placeholder:italic placeholder:text-opacity-70 placeholder:text-[#2D3648] placeholder:text-sm"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-          />
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
