@@ -84,13 +84,13 @@ const pages = [
 export default function Home() {
   const [currentPage, setCurrentPage] = useState(0);
   const handleNext = () => {
-    if (currentPage === pages.length - 1) {
-      // If it's the last page, navigate to the chat page
-      //   router.push("/task1");
-      console.log("do nothing");
-    } else {
-      setCurrentPage((prev) => prev + 1);
-    }
+    // if (currentPage === pages.length - 1) {
+    //   // If it's the last page, navigate to the chat page
+    //   //   router.push("/task1");
+    //   console.log("do nothing");
+    // } else {
+    setCurrentPage((prev) => prev + 1);
+    // }
   };
 
   const handleBack = () => {
@@ -109,6 +109,23 @@ export default function Home() {
       >
         Back
       </button>
+      <AnimatePresence>
+        {currentPage === pages.length && (
+          <motion.div
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -50, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-50 bg-white text-river-black"
+          >
+            <div className="fixed inset-0 flex h-full flex-col items-center justify-center text-river-black text-opacity-70">
+              <div className="text-center text-2xl font-semibold text-river-black">
+                Please go back to the questionnaire.
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <main className="relative w-full flex-1 overflow-hidden">
         <AnimatePresence initial={false}>
           <motion.div
@@ -120,10 +137,10 @@ export default function Home() {
             className="absolute left-0 top-0 flex h-full w-full flex-col justify-start"
           >
             <h1 className="mb-6 text-3xl font-bold text-black">
-              {pages[currentPage].title}
+              {pages[currentPage]?.title}
             </h1>
             <div className="mb-12 whitespace-pre-line text-lg text-black text-opacity-60">
-              {pages[currentPage].content()}
+              {pages[currentPage]?.content()}
             </div>
           </motion.div>
         </AnimatePresence>

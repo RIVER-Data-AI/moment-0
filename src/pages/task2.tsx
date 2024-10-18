@@ -396,7 +396,7 @@ const Chat = () => {
             )}
           </AnimatePresence>
           <AnimatePresence>
-            {step == 4 && (
+            {step === 4 && (
               <motion.div
                 initial={{ y: -50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -415,9 +415,13 @@ const Chat = () => {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -50, opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="fixed left-0 right-0 top-0 z-50 mt-16 border-t-2 border-primary-border text-center text-white"
+                className="fixed inset-0 z-50 bg-white text-river-black"
               >
-                <EndScreen />
+                <div className="fixed inset-0 flex h-full flex-col items-center justify-center text-river-black text-opacity-70">
+                  <div className="text-center text-2xl font-semibold text-river-black">
+                    Please go back to the questionnaire.
+                  </div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -465,7 +469,7 @@ const Chat = () => {
           </AnimatePresence>
 
           <AnimatePresence>{showSignUpForm && <SignUpForm />}</AnimatePresence>
-          <div className="z-10 flex flex-col items-center justify-around gap-2 place-self-end pb-4 pt-20">
+          <div className="z-10 flex flex-col items-center justify-around gap-2 place-self-end pb-4">
             <AnimatePresence>
               {showWelcome && (
                 <motion.div

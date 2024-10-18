@@ -6,44 +6,46 @@ interface DataSaleOverlayProps {
   handleNextStep?: () => void;
 }
 
-const DataSaleOverlay: React.FC<DataSaleOverlayProps> = () => {
+const DataSaleOverlay: React.FC<DataSaleOverlayProps> = ({
+  handleNextStep,
+}) => {
   return (
-    <div className="fixed inset-0 h-full flex items-center justify-center ">
-      <div className="max-w-md w-full h-full shadow-lg p-6 flex flex-col justify-between">
+    <div className="fixed inset-0 flex h-full items-center justify-center">
+      <div className="flex h-full w-full max-w-md flex-col justify-between p-6 shadow-lg">
         <div>
-          <h2 className="text-gray-500 text-xl mb-4">Well done</h2>
-          <h1 className="text-3xl font-bold text-gray-800 mb-12">
+          <h2 className="mb-4 text-xl text-gray-500">Well done</h2>
+          <h1 className="mb-12 text-3xl font-bold text-gray-800">
             You&apos;ve made your first data sale and earned your first $$ on
             RIVER.
           </h1>
-          <div className="space-y-4 mb-8">
+          <div className="mb-8 space-y-4">
             <div className="flex items-center">
-              <span className="text-2xl mr-3">
+              <span className="mr-3 text-2xl">
                 <PiCurrencyDollarSimpleFill />
               </span>
-              <p className="text-gray-700 text-lg">
+              <p className="text-lg text-gray-700">
                 Visit <span className="font-semibold">RiverBank</span> anytime
                 to undo this, track or sell more data.
               </p>
             </div>
 
             <div className="flex items-center">
-              <span className="text-2xl mr-3">
+              <span className="mr-3 text-2xl">
                 <IoIosLock />
               </span>
-              <p className="text-gray-700 text-lg">
+              <p className="text-lg text-gray-700">
                 Visit <span className="font-semibold">Control</span> to manage
                 your data permissions and privacy anytime.
               </p>
             </div>
           </div>
         </div>
-        {/* <button
+        <button
           onClick={handleNextStep}
-          className="w-full bg-river-black text-white py-3 rounded-md font-semibold hover:bg-blue-700 transition duration-300"
+          className="w-full rounded-md bg-river-black py-3 font-semibold text-white transition duration-300 hover:bg-blue-700"
         >
-          Go to River →
-        </button> */}
+          Next →
+        </button>
       </div>
     </div>
   );

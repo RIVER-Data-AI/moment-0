@@ -337,6 +337,9 @@ const Chat = () => {
               >
                 <div className="flex flex-col items-center justify-center text-river-black text-opacity-70">
                   <div className="text-4xl font-semibold">Account created.</div>
+                  <div className="mt-20 text-center text-2xl font-semibold text-river-black">
+                    Please go back to the questionnaire.
+                  </div>
                 </div>
               </motion.div>
             )}
@@ -397,7 +400,7 @@ const Chat = () => {
             )}
           </AnimatePresence>
           <AnimatePresence>{showSignUpForm && <SignUpForm />}</AnimatePresence>
-          <div className="z-10 flex flex-col items-center justify-around gap-2 place-self-end pb-4 pt-20">
+          <div className="z-10 flex flex-col items-center justify-around gap-2 place-self-end pb-4">
             <AnimatePresence>
               {showWelcome && (
                 <motion.div
