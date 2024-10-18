@@ -4,18 +4,22 @@ import { PiCurrencyDollarSimpleFill as CoinIcon } from "react-icons/pi";
 import { FaBriefcase } from "react-icons/fa";
 import { PiCoinsBold } from "react-icons/pi";
 
-const TildeInfo: React.FC<{ index?: number }> = ({ index }) => {
-  const isHighlighted = (sectionIndex: number) => index === sectionIndex;
+const TildeInfo: React.FC<{ index?: number; highlightAll?: boolean }> = ({
+  index,
+  highlightAll = false,
+}) => {
+  const isHighlighted = (sectionIndex: number) =>
+    highlightAll || index === sectionIndex;
   const borderColor = (sectionIndex: number) =>
     isHighlighted(sectionIndex) ? "border-[#CBD2E0]" : "border-gray-200";
   const textColor = (sectionIndex: number) =>
     isHighlighted(sectionIndex) ? "text-black" : "text-gray-400";
 
   return (
-    <div className="max-w-sm mx-auto">
+    <div className="mx-auto max-w-sm">
       <div
-        className={`flex justify-between mb-4 bg-[#FAFAFA] rounded-full text-sm px-3 border-2 ${borderColor(
-          -1
+        className={`mb-4 flex justify-between rounded-full border-2 bg-[#FAFAFA] px-3 text-sm ${borderColor(
+          -1,
         )}`}
       >
         <span className="flex text-2xl">~</span>
@@ -23,7 +27,7 @@ const TildeInfo: React.FC<{ index?: number }> = ({ index }) => {
           <div
             key={sectionIndex}
             className={`flex items-center border-l-2 ${borderColor(
-              -1
+              -1,
             )} pl-3 ${textColor(sectionIndex)}`}
           >
             <span
@@ -68,7 +72,7 @@ const TildeInfo: React.FC<{ index?: number }> = ({ index }) => {
       </div>
       <div className={`border-2 ${borderColor(-1)}`}>
         <div
-          className={`text-center text-2xl mb-4 border-b-2 ${borderColor(-1)}`}
+          className={`mb-4 border-b-2 text-center text-2xl ${borderColor(-1)}`}
         >
           ~
         </div>
@@ -96,7 +100,7 @@ const TildeInfo: React.FC<{ index?: number }> = ({ index }) => {
         ].map((section, sectionIndex) => (
           <div
             key={sectionIndex}
-            className={`flex items-center justify-start mb-4 pb-4 ${
+            className={`mb-4 flex items-center justify-start pb-4 ${
               sectionIndex < 3 ? `border-b-2 ${borderColor(-1)}` : ""
             }`}
           >
@@ -106,7 +110,7 @@ const TildeInfo: React.FC<{ index?: number }> = ({ index }) => {
                 {section.title}
               </h3>
               <div
-                className={`flex text-sm text-start ${textColor(sectionIndex)}`}
+                className={`flex text-start text-sm ${textColor(sectionIndex)}`}
               >
                 {section.description}
               </div>
